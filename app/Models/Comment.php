@@ -3,25 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Comment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'material_id', 
-        'user_id', 
-        'content', 
-        'is_admin_comment'
-        ];
+        'body',
+        'user_id',
+        'material_id',
+    ];
 
-    public function material()
-    {
-        return $this->belongsTo(Material::class);
-    }
-
+    // Relasi ke User
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Relasi ke Material
+    public function material()
+    {
+        return $this->belongsTo(Material::class);
     }
 }

@@ -9,20 +9,29 @@ class Material extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['subject_id', 'title', 'type', 'file_path', 'youtube_url'];
+    protected $fillable = [
+        'title',
+        'type',
+        'file_path',
+        'youtube_link',
+        'subject_id',
+    ];
 
+    // Relasi ke Subject
     public function subject()
     {
         return $this->belongsTo(Subject::class);
     }
 
+    // Relasi ke Comment
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
 
-    public function favoritedBy()
+    // Relasi ke Favorite
+    public function favorites()
     {
-        return $this->belongsToMany(User::class, 'favorites');
+        return $this->hasMany(Favorite::class);
     }
 }
