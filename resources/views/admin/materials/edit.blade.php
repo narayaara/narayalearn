@@ -1,40 +1,47 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-md mx-auto py-8">
-    <h1 class="text-xl font-semibold mb-4">Edit Material</h1>
+<div class="container py-4" style="max-width: 480px;">
+    <h2 class="fw-bold mb-4" style="color: #2D1B2E;">Edit Material</h2>
     <form action="{{ route('admin.materials.update', $material) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-        <label class="block mb-1">Subject</label>
-        <select name="subject_id" class="w-full border rounded p-2 mb-2">
-            @foreach ($subjects as $subject)
-                <option value="{{ $subject->id }}" {{ $material->subject_id == $subject->id ? 'selected' : '' }}>{{ $subject->name }}</option>
-            @endforeach
-        </select>
-
-        <label class="block mb-1">Type</label>
-        <select name="type" id="type" class="w-full border rounded p-2 mb-2">
-            <option value="materi" {{ $material->type == 'materi' ? 'selected' : '' }}>Materials</option>
-            <option value="video" {{ $material->type == 'video' ? 'selected' : '' }}>Video</option>
-            <option value="latihan" {{ $material->type == 'latihan' ? 'selected' : '' }}>Exercises</option>
-        </select>
-
-        <label class="block mb-1">Title</label>
-        <input type="text" name="title" value="{{ old('title', $material->title) }}" class="w-full border rounded p-2 mb-2">
-        @error('title') <p class="text-red-600 text-sm">{{ $message }}</p> @enderror
-
-        <div id="file-field">
-            <label class="block mb-1">File (PDF) — leave empty to keep current file</label>
-            <input type="file" name="file" class="w-full border rounded p-2 mb-2">
+        <div class="mb-3">
+            <label class="form-label">Subject</label>
+            <select name="subject_id" class="form-select rounded-3">
+                @foreach ($subjects as $subject)
+                    <option value="{{ $subject->id }}" {{ $material->subject_id == $subject->id ? 'selected' : '' }}>{{ $subject->name }}</option>
+                @endforeach
+            </select>
         </div>
 
-        <div id="youtube-field" class="hidden">
-            <label class="block mb-1">YouTube URL</label>
-            <input type="text" name="youtube_url" value="{{ old('youtube_url', $material->youtube_url) }}" class="w-full border rounded p-2 mb-2">
+        <div class="mb-3">
+            <label class="form-label">Type</label>
+            <select name="type" id="type" class="form-select rounded-3">
+                <option value="materi" {{ $material->type == 'materi' ? 'selected' : '' }}>Materials</option>
+                <option value="video" {{ $material->type == 'video' ? 'selected' : '' }}>Video</option>
+                <option value="latihan" {{ $material->type == 'latihan' ? 'selected' : '' }}>Exercises</option>
+            </select>
         </div>
 
-        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded mt-2">Save changes</button>
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" value="{{ old('title', $material->title) }}" class="form-control rounded-3">
+            @error('title') <div class="text-danger small">{{ $message }}</div> @enderror
+        </div>
+
+        <div class="mb-3" id="file-field">
+            <label class="form-label">File (PDF) — kosongkan kalau tidak diganti</label>
+            <input type="file" name="file" class="form-control rounded-3">
+        </div>
+
+        <div class="mb-3 d-none" id="youtube-field">
+            <label class="form-label">YouTube URL</label>
+            <input type="text" name="youtube_url" value="{{ old('youtube_url', $material->youtube_url) }}" class="form-control rounded-3">
+        </div>
+
+        <button type="submit" class="btn" style="background:#FF6B9D;color:#fff;">Save changes</button>
+        <a href="{{ route('admin.materials.index') }}" class="btn btn-outline-secondary">Cancel</a>
     </form>
 </div>
 
@@ -44,11 +51,11 @@
     const youtubeField = document.getElementById('youtube-field');
     function toggleFields() {
         if (typeSelect.value === 'video') {
-            fileField.classList.add('hidden');
-            youtubeField.classList.remove('hidden');
+            fileField.classList.add('d-none');
+            youtubeField.classList.remove('d-none');
         } else {
-            fileField.classList.remove('hidden');
-            youtubeField.classList.add('hidden');
+            fileField.classList.remove('d-none');
+            youtubeField.classList.add('d-none');
         }
     }
     typeSelect.addEventListener('change', toggleFields);

@@ -271,27 +271,22 @@
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-end">
-                                    {{-- <li>
-                                        <a class="dropdown-item" href="{{ route('profile.index') }}">
-                                            <i class="fas fa-user"></i> My Account
-                                        </a>
-                                    </li> --}}
-                                    <li>
-                                        {{-- <a class="dropdown-item" href="{{ route('profile.favorites') }}"> --}}
-                                            <i class="fas fa-heart" style="color: var(--pink-primary);"></i> Favorites
-                                        </a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li>
-                                        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
-                                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                            <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
-                                        </a>
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                            @csrf
-                                        </form>
-                                    </li>
-                                </ul>
+    <li>
+        <a class="dropdown-item" href="{{ route('profile.index') }}">
+            <i class="fas fa-user"></i> My Account
+        </a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li>
+        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
+        </a>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+            @csrf
+        </form>
+    </li>
+</ul>
                             </li>
                         @endguest
                     </ul>

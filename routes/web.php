@@ -24,6 +24,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('materials', MaterialController::class);
     Route::resource('users', UserController::class)->only(['index', 'destroy']);
     
+    Route::get('/account', [ProfileController::class, 'index'])->name('profile.index');
+
     // Comment Moderation
     Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
     Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
@@ -34,6 +36,7 @@ Route::get('/subjects', [SubjectContentController::class, 'index'])->name('subje
 Route::get('/subjects/{subject}', [SubjectContentController::class, 'show'])->name('subjects.show');
 Route::get('/materials/{material}', [SubjectContentController::class, 'showMaterial'])->name('materials.show');
 Route::get('/materials/{material}/download', [SubjectContentController::class, 'download'])->name('materials.download');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
 // ===== AUTH ROUTES =====
 Route::middleware(['auth'])->group(function () {

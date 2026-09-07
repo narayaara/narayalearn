@@ -1,33 +1,43 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-3xl mx-auto py-8">
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-xl font-semibold">Subject Management</h1>
-        <a href="{{ route('admin.subjects.create') }}" class="bg-indigo-600 text-white px-4 py-2 rounded">Add Subject</a>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0" style="color: #2D1B2E;">
+            <i class="fas fa-book" style="color: #FF6B9D;"></i> Subject Management
+        </h2>
+        <a href="{{ route('admin.subjects.create') }}" class="btn" style="background:#FF6B9D;color:#fff;">
+            <i class="fas fa-plus"></i> Add Subject
+        </a>
     </div>
 
     @if (session('success'))
-        <div class="bg-green-100 text-green-700 p-2 rounded mb-4">{{ session('success') }}</div>
+        <div class="alert alert-success rounded-4">{{ session('success') }}</div>
     @endif
 
-    <div class="space-y-2">
-        @foreach ($subjects as $subject)
-            <div class="flex justify-between items-center border rounded p-3">
+    @forelse ($subjects as $subject)
+        <div class="card border-0 shadow-sm rounded-4 p-3 mb-2">
+            <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <span>{{ $subject->name }}</span>
-                    <span class="text-sm text-gray-500">({{ $subject->materials_count }} contents)</span>
+                    <span class="fw-bold" style="color:#2D1B2E;">{{ $subject->name }}</span>
+                    <span class="badge bg-light text-muted ms-2">{{ $subject->materials_count }} contents</span>
                 </div>
-                <div class="space-x-2">
-                    <a href="{{ route('admin.subjects.edit', $subject) }}" class="text-blue-600">Edit</a>
-                    <form action="{{ route('admin.subjects.destroy', $subject) }}" method="POST" class="inline" onsubmit="return confirm('Delete this subject?')">
+                <div class="d-flex gap-2">
+                    <a href="{{ route('admin.subjects.edit', $subject) }}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="{{ route('admin.subjects.destroy', $subject) }}" method="POST" onsubmit="return confirm('Delete this subject?')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="text-red-600">Delete</button>
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </form>
                 </div>
             </div>
-        @endforeach
-    </div>
+        </div>
+    @empty
+        <p class="text-muted text-center">Belum ada subject.</p>
+    @endforelse
 </div>
 @endsection
