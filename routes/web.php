@@ -1,47 +1,101 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Admin\SubjectController;
-use App\Http\Controllers\Admin\MaterialController; 
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\CommentController as AdminCommentController; // ⬅️ TAMBAHKAN ALIAS
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\SubjectContentController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\FavoriteController;
-use App\Http\Controllers\ProfileController;
 
 Auth::routes();
 
-Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// ===== ADMIN ROUTES =====
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
-    Route::resource('subjects', SubjectController::class);
-    Route::resource('materials', MaterialController::class);
-    Route::resource('users', UserController::class)->only(['index', 'destroy']);
+// ====================
+// HOME
+// ====================
 
-    // Comment Moderation
-    Route::get('/comments', [AdminCommentController::class, 'index'])->name('comments.index');
-    Route::delete('/comments/{comment}', [AdminCommentController::class, 'destroy'])->name('comments.destroy');
-});
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])
+    ->name('home');
 
-// ===== PUBLIC ROUTES =====
-Route::get('/subjects', [SubjectContentController::class, 'index'])->name('subjects.index');
-Route::get('/subjects/{subject}', [SubjectContentController::class, 'show'])->name('subjects.show');
-Route::get('/materials/{material}', [SubjectContentController::class, 'showMaterial'])->name('materials.show');
-Route::get('/materials/{material}/download', [SubjectContentController::class, 'download'])->name('materials.download');
-Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
-Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-Route::get('/account', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])
+    ->name('home');
 
-// ===== AUTH ROUTES =====
+
+// ADMIN
+
+Route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.dashboard');
+
+Route::resource('/admin/subjects', App\Http\Controllers\Admin\SubjectController::class)
+    ->middleware(['auth', 'admin'])
+    ->names('admin.subjects');
+
+Route::resource('/admin/materials', App\Http\Controllers\Admin\MaterialController::class)
+    ->middleware(['auth', 'admin'])
+    ->names('admin.materials');
+
+Route::get('/admin/users', [App\Http\Controllers\Admin\UserController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.users.index');
+
+Route::delete('/admin/users/{user}', [App\Http\Controllers\Admin\UserController::class, 'destroy'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.users.destroy');
+
+Route::get('/admin/comments', [App\Http\Controllers\Admin\CommentController::class, 'index'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.comments.index');
+
+Route::delete('/admin/comments/{comment}', [App\Http\Controllers\Admin\CommentController::class, 'destroy'])
+    ->middleware(['auth', 'admin'])
+    ->name('admin.comments.destroy');
+
+
+// ====================
+// PUBLIC
+// ====================
+
+Route::get('/subjects', [App\Http\Controllers\SubjectContentController::class, 'index'])
+    ->name('subjects.index');
+
+Route::get('/subjects/{subject}', [App\Http\Controllers\SubjectContentController::class, 'show'])
+    ->name('subjects.show');
+
+Route::get('/materials/{material}', [App\Http\Controllers\SubjectContentController::class, 'showMaterial'])
+    ->name('materials.show');
+
+Route::get('/materials/{material}/download', [App\Http\Controllers\SubjectContentController::class, 'download'])
+    ->name('materials.download');
+
+
+// ====================
+// PROFILE
+// ====================
+
+Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])
+    ->name('profile.index');
+
+Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])
+    ->name('profile.update');
+
+Route::get('/account', [App\Http\Controllers\ProfileController::class, 'index'])
+    ->name('account.index');
+
+
+// ====================
+// AUTHENTICATED USER
+// ====================
+
+Route::post('/materials/{material}/comments', [App\Http\Controllers\CommentController::class, 'store'])
+    ->middleware('auth')
+    ->name('comments.store');
+
+Route::delete('/comments/{comment}', [App\Http\Controllers\CommentController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('comments.destroy');
+
+Route::post('/materials/{material}/favorite', [App\Http\Controllers\FavoriteController::class, 'toggle'])
+    ->middleware('auth')
+    ->name('favorites.toggle');
+
+// ===== PROFILE ROUTES =====
 Route::middleware(['auth'])->group(function () {
-    Route::post('/materials/{material}/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-    Route::post('/materials/{material}/favorite', [FavoriteController::class, 'toggle'])->name('favorites.toggle');
+    Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/favorites', [App\Http\Controllers\ProfileController::class, 'favorites'])->name('profile.favorites');
 });

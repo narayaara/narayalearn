@@ -6,3 +6,189 @@
 
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
+
+// Fonts
+@import url('https://fonts.bunny.net/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+// ==============================================
+// CUSTOM STYLE NARAYALEARN (PINK THEME)
+// ==============================================
+
+:root {
+    --pink-primary: #FF6B9D;
+    --pink-light: #FFE0EB;
+    --pink-dark: #E0558A;
+    --pink-soft: #FFF5F8;
+    --text-dark: #2D1B2E;
+    --text-gray: #6B5B6D;
+}
+
+// ===== NAVBAR PINK =====
+.navbar-pink {
+    background: linear-gradient(135deg, #FF6B9D 0%, #FF8FB5 100%) !important;
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.3);
+    padding: 12px 0;
+
+    .navbar-brand {
+        color: #fff !important;
+        font-weight: 700;
+        font-family: 'Nunito', sans-serif;
+        font-size: 1.4rem;
+
+        i {
+            font-size: 1.6rem;
+        }
+    }
+
+    .nav-link {
+        color: rgba(255, 255, 255, 0.85) !important;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border-radius: 8px;
+        padding: 8px 16px;
+
+        &:hover,
+        &.active {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        i {
+            margin-right: 6px;
+        }
+    }
+
+    .dropdown-toggle {
+        color: #fff !important;
+    }
+
+    .dropdown-menu {
+        border: none;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        border-radius: 12px;
+        padding: 8px;
+    }
+
+    .dropdown-item {
+        border-radius: 8px;
+        padding: 8px 16px;
+        color: var(--text-dark);
+        transition: all 0.2s;
+
+        &:hover {
+            background: var(--pink-light);
+            color: var(--pink-dark);
+        }
+
+        i {
+            width: 20px;
+            color: var(--pink-primary);
+        }
+    }
+}
+
+// ===== BUTTON PINK =====
+.btn-pink {
+    background: var(--pink-primary);
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: var(--pink-dark);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
+    }
+}
+
+.btn-pink-outline {
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 6px 18px;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background: #fff;
+        color: var(--pink-primary);
+        border-color: #fff;
+    }
+}
+
+// ===== BADGE ADMIN =====
+.badge-admin {
+    background: #fff;
+    color: var(--pink-primary);
+    font-size: 0.6rem;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+// ===== AVATAR NAVBAR =====
+.avatar-nav {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+// ===== CARD PINK =====
+.card-pink {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 8px 35px rgba(255, 107, 157, 0.15);
+        transform: translateY(-4px);
+    }
+}
+
+// ===== FOOTER =====
+.footer-pink {
+    border-top: 3px solid var(--pink-light);
+    background: #fff;
+}
+
+// ===== RESPONSIVE TOGGLER =====
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.9)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+// ===== DASHBOARD CARDS =====
+.dashboard-card {
+    transition: all 0.3s ease;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(255, 107, 157, 0.15);
+    }
+}
+
+// ===== BACKGROUND SOFT =====
+.bg-pink-soft {
+    background-color: var(--pink-soft);
+}
