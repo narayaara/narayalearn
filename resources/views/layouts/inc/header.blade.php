@@ -1,12 +1,12 @@
-<nav class="navbar navbar-expand-md navbar-pink shadow-lg sticky-top">
-    <div class="container">
-        <!-- Brand / Logo -->
-        <a class="navbar-brand fw-bold" href="{{ url('/') }}">
-            <i class="fas fa-graduation-cap me-2"></i>
-            {{ config('app.name', 'NarayaLearn') }}
+<nav class="navbar navbar-expand-md navbar-pink shadow-sm sticky-top">
+    <div class="container-fluid px-4 px-lg-5">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url('/') }}">
+            <i class="fas fa-graduation-cap"></i>
+            <span>NarayaLearn</span>
         </a>
 
-        <!-- Toggler Mobile -->
+        <!-- Toggler -->
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" 
                 data-bs-target="#navbarNav" aria-controls="navbarNav" 
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -15,27 +15,26 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Left Menu -->
-            <ul class="navbar-nav me-auto">
+            <ul class="navbar-nav me-auto ms-md-4">
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" 
                        href="{{ route('home') }}">
-                        <i class="fas fa-home me-1"></i> Home
+                        <i class="fas fa-home me-2"></i> Home
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->routeIs('subjects.*') ? 'active' : '' }}" 
                        href="{{ route('subjects.index') }}">
-                        <i class="fas fa-book me-1"></i> Subjects
+                        <i class="fas fa-book me-2"></i> Subjects
                     </a>
                 </li>
 
-                <!-- Admin Dropdown -->
                 @auth
                     @if(Auth::user()->role === 'admin')
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" 
                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-crown me-1"></i> Admin Panel
+                                <i class="fas fa-crown me-2"></i> Admin Panel
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
@@ -70,29 +69,31 @@
                 @endauth
             </ul>
 
-            <!-- Right Menu (Auth) -->
-            <ul class="navbar-nav ms-auto">
+            <!-- Right Menu -->
+            <ul class="navbar-nav ms-auto align-items-md-center gap-2 mt-3 mt-md-0">
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">
-                            <i class="fas fa-sign-in-alt me-1"></i> Login
+                        <a class="btn btn-auth-nav w-100 w-md-auto" href="{{ route('login') }}">
+                            <i class="fas fa-sign-in-alt me-2"></i> Login
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-pink-outline btn-sm" href="{{ route('register') }}">
-                            <i class="fas fa-user-plus me-1"></i> Register
+                        <a class="btn btn-auth-nav-outline w-100 w-md-auto" href="{{ route('register') }}">
+                            <i class="fas fa-user-plus me-2"></i> Register
                         </a>
                     </li>
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" 
                            href="#" role="button" data-bs-toggle="dropdown">
-                            @if(Auth::user()->avatar)
-                                <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" 
-                                     class="avatar-nav" alt="Avatar">
-                            @else
-                                <i class="fas fa-user-circle" style="font-size: 28px; color: rgba(255,255,255,0.9);"></i>
-                            @endif
+                            <div class="avatar-nav-wrapper">
+                                @if(Auth::user()->avatar)
+                                    <img src="{{ asset('storage/avatars/'.Auth::user()->avatar) }}" 
+                                         class="avatar-nav" alt="Avatar">
+                                @else
+                                    <i class="fas fa-user-circle" style="font-size: 28px;"></i>
+                                @endif
+                            </div>
                             <span>{{ Auth::user()->name }}</span>
                             @if(Auth::user()->role === 'admin')
                                 <span class="badge-admin ms-1">Admin</span>
@@ -100,13 +101,13 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="{{ route('profile.index') ?? '#' }}">
+                                <a class="dropdown-item" href="#">
                                     <i class="fas fa-user me-2"></i> My Account
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ route('profile.favorites') ?? '#' }}">
-                                    <i class="fas fa-heart me-2" style="color: #FF6B9D;"></i> Favorites
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-heart me-2"></i> Favorites
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
