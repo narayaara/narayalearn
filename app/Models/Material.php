@@ -34,4 +34,10 @@ class Material extends Model
     {
         return $this->hasMany(Favorite::class);
     }
+
+    // Relasi ke User melalui Favorite
+    public function favoritedBy()
+    {
+        return $this->hasMany(Favorite::class);
+    }
 }

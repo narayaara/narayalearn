@@ -14,9 +14,9 @@
     </div>
 
     <!-- Daftar Subject -->
-    <div class="row g-4">
+    <div class="row g-4" justify-content-center>
         @forelse($subjects as $subject)
-            <div class="col-md-4 col-lg-3">
+            <div class="col-md-4">
                 <a href="{{ route('subjects.show', $subject) }}" class="text-decoration-none">
                     <div class="card card-pink h-100 text-center p-4">
                         <!-- Icon -->

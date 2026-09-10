@@ -11,15 +11,8 @@ class SubjectSeeder extends Seeder
     {
         $subjects = [
             'Matematika',
-            'Fisika',
-            'Kimia',
-            'Biologi',
             'Bahasa Indonesia',
-            'Bahasa Inggris',
-            'Sejarah',
-            'Geografi',
-            'Ekonomi',
-            'Sosiologi',
+            'Bahasa Inggris'
         ];
 
         foreach ($subjects as $subject) {

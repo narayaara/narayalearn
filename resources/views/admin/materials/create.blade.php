@@ -3,6 +3,18 @@
 @section('content')
 <div class="container py-4" style="max-width: 480px;">
     <h2 class="fw-bold mb-4" style="color: #2D1B2E;">Add Material</h2>
+
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong>Error!</strong>
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form action="{{ route('admin.materials.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
@@ -14,14 +26,11 @@
             </select>
         </div>
 
-        <div class="mb-3">
-            <label class="form-label">Type</label>
-            <select name="type" id="type" class="form-select rounded-3">
-                <option value="materi">Materials</option>
-                <option value="video">Video</option>
-                <option value="latihan">Exercises</option>
-            </select>
-        </div>
+        <select name="type" id="type" class="form-select rounded-3">
+            <option value="material">Materials</option>
+            <option value="video">Video</option>
+            <option value="exercise">Exercises</option>
+        </select>
 
         <div class="mb-3">
             <label class="form-label">Title</label>

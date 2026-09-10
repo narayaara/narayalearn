@@ -27,8 +27,8 @@ class MaterialController extends Controller
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
             'title' => 'required|string|max:128',
-            'type' => 'required|in:materi,video,latihan',
-            'file' => 'required_if:type,materi,latihan|file|mimes:pdf|max:5120',
+            'type' => 'required|in:material,video,exercise',
+            'file' => 'required_if:type,material,exercise|file|mimes:pdf|max:5120',
             'youtube_url' => 'required_if:type,video|nullable|url',
         ]);
 
