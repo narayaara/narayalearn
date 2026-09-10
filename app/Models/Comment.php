@@ -10,9 +10,10 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'body',
+        'content',
         'user_id',
         'material_id',
+        'is_admin_comment',
     ];
 
     // Relasi ke User

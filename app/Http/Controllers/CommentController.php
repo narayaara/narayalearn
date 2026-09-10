@@ -12,12 +12,13 @@ class CommentController extends Controller
     public function store(Request $request, Material $material)
     {
         $request->validate([
-            'body' => 'required|string|max:1000',
+            'content' => 'required|string|max:1000',
         ]);
 
         $material->comments()->create([
             'user_id' => auth()->id(),
-            'body' => $request->body,
+            'content' => $request->content,
+            'is_admin_comment' => auth()->user()->role === 'admin', // Tandai komentar sebagai admin jika user adalah admin
         ]);
 
         return redirect()->back()->with('success', 'Komentar berhasil ditambahkan!');

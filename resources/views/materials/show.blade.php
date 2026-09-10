@@ -41,11 +41,11 @@
                     <div>
                         <span class="badge mb-2" style="background: var(--pink-light); color: var(--pink-primary);">
                             @if($material->type == 'material')
-                                <i class="fas fa-file-alt me-1"></i> Material
+                                <i class="fas fa-file-alt me-1"></i> Materi
                             @elseif($material->type == 'video')
                                 <i class="fas fa-video me-1"></i> Video
                             @else
-                                <i class="fas fa-tasks me-1"></i> Exercise
+                                <i class="fas fa-tasks me-1"></i> Latihan Soal
                             @endif
                         </span>
                         <h2 class="fw-bold mb-1" style="color: #2D1B2E;">{{ $material->title }}</h2>
@@ -162,9 +162,9 @@
                                 </span>
                             </div>
                         @endif
-                        <textarea name="body" rows="3" class="form-control mb-2 @error('body') is-invalid @enderror" 
-                                  placeholder="Tulis komentar atau pertanyaanmu..." required>{{ old('body') }}</textarea>
-                        @error('body') <p class="text-danger small">{{ $message }}</p> @enderror
+                        <textarea name="content" rows="3" class="form-control mb-2 @error('content') is-invalid @enderror" 
+                                  placeholder="Tulis komentar atau pertanyaanmu..." required>{{ old('content') }}</textarea>
+                        @error('content') <p class="text-danger small">{{ $message }}</p> @enderror
                         <div class="text-end">
                             <button type="submit" class="btn btn-pink btn-sm">
                                 <i class="fas fa-paper-plane me-1"></i> Kirim
@@ -186,7 +186,7 @@
         <!-- Daftar Komentar -->
         @forelse($material->comments()->latest()->get() as $comment)
             @php
-                $isAdminComment = $comment->user && $comment->user->role === 'admin';
+                $isAdminComment = $comment->is_admin_comment;
             @endphp
             
             <div class="d-flex gap-3 mb-3 p-3 rounded position-relative" 
@@ -249,7 +249,7 @@
                     </div>
                     
                     <p class="mt-2 mb-0" style="color: #2D1B2E; {{ $isAdminComment ? 'font-weight: 500;' : '' }}">
-                        {{ $comment->body }}
+                        {{ $comment->content }}
                     </p>
                 </div>
             </div>
