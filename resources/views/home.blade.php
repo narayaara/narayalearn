@@ -4,7 +4,8 @@
 
 @section('content')
 <div class="container py-5">
-    <!-- Hero Section -->
+
+    <!-- ===== HERO SECTION ===== -->
     <div class="row align-items-center py-4">
         <div class="col-lg-6">
             <h1 class="display-4 fw-bold" style="color: #2D1B2E;">
@@ -33,128 +34,106 @@
         </div>
     </div>
 
-    <!-- Statistik -->
+    <!-- ===== STATISTIK (DINAMIS) ===== -->
     <div class="row text-center mt-5 g-4">
         <div class="col-md-3 col-6">
             <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">50+</h3>
+                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalSubjects }}</h3>
+                <p class="text-muted mb-0">Mata Pelajaran</p>
+            </div>
+        </div>
+        <div class="col-md-3 col-6">
+            <div class="p-3 rounded-4" style="background: var(--pink-soft);">
+                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalMaterials }}</h3>
                 <p class="text-muted mb-0">Materi</p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">30+</h3>
-                <p class="text-muted mb-0">Video</p>
+                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalUsers }}</h3>
+                <p class="text-muted mb-0">Pengguna</p>
             </div>
         </div>
         <div class="col-md-3 col-6">
             <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">100+</h3>
-                <p class="text-muted mb-0">Latihan Soal</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">500+</h3>
-                <p class="text-muted mb-0">Siswa Aktif</p>
+                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalComments }}</h3>
+                <p class="text-muted mb-0">Komentar</p>
             </div>
         </div>
     </div>
 
-    <!-- Mata Pelajaran Populer -->
+    <!-- ===== SUBJECT POPULER (DINAMIS) ===== -->
     <div class="mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold" style="color: #2D1B2E;">
                 <i class="fas fa-book" style="color: var(--pink-primary);"></i> 
-                Mata Pelajaran Populer
+                Mata Pelajaran
             </h3>
             <a href="{{ route('subjects.index') }}" class="text-decoration-none" style="color: var(--pink-primary);">
                 Lihat Semua <i class="fas fa-arrow-right"></i>
             </a>
         </div>
 
-        <div class="row g-4">
-            <!-- Card Subject 1 -->
-            <div class="col-md-3 col-6">
-                <div class="card-pink card h-100 p-3 text-center">
-                    <div class="p-3 rounded-circle mx-auto" style="background: var(--pink-light); width: 70px; height: 70px;">
-                        <i class="fas fa-calculator" style="font-size: 30px; color: var(--pink-primary);"></i>
-                    </div>
-                    <h6 class="mt-2 fw-bold">Matematika</h6>
-                    <small class="text-muted">12 Materi</small>
+        <div class="row g-4 justify-content-center">
+            @forelse($popularSubjects as $subject)
+                <div class="col-md-6 col-lg-3">
+                    <a href="{{ route('subjects.show', $subject) }}" class="text-decoration-none">
+                        <div class="card card-pink h-100 p-3 text-center">
+                            <div class="p-3 rounded-circle mx-auto" style="background: var(--pink-light); width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-book" style="font-size: 30px; color: var(--pink-primary);"></i>
+                            </div>
+                            <h6 class="mt-3 fw-bold" style="color: #2D1B2E;">{{ $subject->name }}</h6>
+                            <small class="text-muted">{{ $subject->materials_count }} Materi</small>
+                        </div>
+                    </a>
                 </div>
-            </div>
-            <!-- Card Subject 2 -->
-            <div class="col-md-3 col-6">
-                <div class="card-pink card h-100 p-3 text-center">
-                    <div class="p-3 rounded-circle mx-auto" style="background: var(--pink-light); width: 70px; height: 70px;">
-                        <i class="fas fa-microscope" style="font-size: 30px; color: var(--pink-primary);"></i>
-                    </div>
-                    <h6 class="mt-2 fw-bold">Fisika</h6>
-                    <small class="text-muted">8 Materi</small>
+            @empty
+                <div class="col-12 text-center py-4">
+                    <i class="fas fa-book-open" style="font-size: 48px; color: #ddd;"></i>
+                    <p class="text-muted mt-3">Belum ada mata pelajaran</p>
                 </div>
-            </div>
-            <!-- Card Subject 3 -->
-            <div class="col-md-3 col-6">
-                <div class="card-pink card h-100 p-3 text-center">
-                    <div class="p-3 rounded-circle mx-auto" style="background: var(--pink-light); width: 70px; height: 70px;">
-                        <i class="fas fa-flask" style="font-size: 30px; color: var(--pink-primary);"></i>
-                    </div>
-                    <h6 class="mt-2 fw-bold">Kimia</h6>
-                    <small class="text-muted">10 Materi</small>
-                </div>
-            </div>
-            <!-- Card Subject 4 -->
-            <div class="col-md-3 col-6">
-                <div class="card-pink card h-100 p-3 text-center">
-                    <div class="p-3 rounded-circle mx-auto" style="background: var(--pink-light); width: 70px; height: 70px;">
-                        <i class="fas fa-dna" style="font-size: 30px; color: var(--pink-primary);"></i>
-                    </div>
-                    <h6 class="mt-2 fw-bold">Biologi</h6>
-                    <small class="text-muted">9 Materi</small>
-                </div>
-            </div>
+            @endforelse
         </div>
     </div>
 
-    <!-- Konten Terbaru -->
+    <!-- ===== KONTEN TERBARU (DINAMIS) ===== -->
+    @if($latestMaterials->count() > 0)
     <div class="mt-5">
-        <h3 class="fw-bold" style="color: #2D1B2E;">
+        <h3 class="fw-bold mb-4" style="color: #2D1B2E;">
             <i class="fas fa-clock" style="color: var(--pink-primary);"></i> 
             Konten Terbaru
         </h3>
-        <div class="row g-4 mt-2">
-            <div class="col-md-4">
-                <div class="card-pink card">
-                    <div class="card-body">
-                        <span class="badge bg-primary" style="background: var(--pink-primary) !important;">Materi</span>
-                        <h5 class="mt-2">Persamaan Kuadrat</h5>
-                        <p class="text-muted small">Matematika • 2 hari lalu</p>
-                    </div>
+        <div class="row g-4">
+            @foreach($latestMaterials as $material)
+                <div class="col-md-4">
+                    <a href="{{ route('materials.show', $material) }}" class="text-decoration-none">
+                        <div class="card card-pink p-3">
+                            <div class="card-body">
+                                <span class="badge mb-2" style="background: var(--pink-light); color: var(--pink-primary);">
+                                    @if($material->type == 'material')
+                                        <i class="fas fa-file-alt me-1"></i> Materi
+                                    @elseif($material->type == 'video')
+                                        <i class="fas fa-video me-1"></i> Video
+                                    @else
+                                        <i class="fas fa-tasks me-1"></i> Latihan
+                                    @endif
+                                </span>
+                                <h5 class="mt-2" style="color: #2D1B2E;">{{ $material->title }}</h5>
+                                <p class="text-muted small mb-0">
+                                    <i class="fas fa-book me-1"></i> {{ $material->subject->name ?? 'No Subject' }}
+                                    <span class="mx-2">•</span>
+                                    <i class="fas fa-clock me-1"></i> {{ $material->created_at->diffForHumans() }}
+                                </p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-pink card">
-                    <div class="card-body">
-                        <span class="badge bg-danger" style="background: #FF6B6B !important;">Video</span>
-                        <h5 class="mt-2">Hukum Newton</h5>
-                        <p class="text-muted small">Fisika • 3 hari lalu</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card-pink card">
-                    <div class="card-body">
-                        <span class="badge bg-success" style="background: #51CF66 !important;">Latihan</span>
-                        <h5 class="mt-2">Stoikiometri</h5>
-                        <p class="text-muted small">Kimia • 5 hari lalu</p>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
+    @endif
 
-    <!-- CTA untuk Guest -->
+    <!-- ===== CTA UNTUK GUEST ===== -->
     @guest
         <div class="mt-5 p-5 text-center rounded-4" style="background: var(--pink-soft);">
             <h3 style="color: #2D1B2E;">Siap Belajar?</h3>
