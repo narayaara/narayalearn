@@ -101,12 +101,12 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('profile.index') }}">
                                     <i class="fas fa-user me-2"></i> My Account
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{{ route('profile.index') }}">
                                     <i class="fas fa-heart me-2"></i> Favorites
                                 </a>
                             </li>
