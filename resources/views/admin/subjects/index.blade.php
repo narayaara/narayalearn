@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Kelola Subject - Admin')
+@section('title', 'Subject Management - Admin')
 
 @section('content')
 <div class="container py-4">
@@ -33,7 +33,7 @@
             </div>
         </div>
     @empty
-        <p class="text-muted text-center">Belum ada subject.</p>
+        <p class="text-muted text-center">No subjects found.</p>
     @endforelse
 </div>
 
@@ -47,7 +47,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.26.25/sweetalert2.all.min.js"></script>
 
 <script>
-// ===== KONFIRMASI HAPUS =====
 function actionDestroy(url, itemName = 'item ini') {
     Swal.fire({
         title: 'Are you sure?',
@@ -67,7 +66,6 @@ function actionDestroy(url, itemName = 'item ini') {
     });
 }
 
-// ===== NOTIFIKASI SUKSES (TOAST) =====
 @if (Session::has('success'))
     const Toast = Swal.mixin({
         toast: true,
@@ -87,7 +85,6 @@ function actionDestroy(url, itemName = 'item ini') {
     });
 @endif
 
-// ===== NOTIFIKASI ERROR =====
 @if (Session::has('error'))
     Swal.fire({
         icon: 'error',
