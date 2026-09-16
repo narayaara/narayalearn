@@ -292,3 +292,42 @@
         font-size: 1.5rem;
     }
 }
+
+// ==============================================
+// PDF PREVIEW RESPONSIVE
+// ==============================================
+.pdf-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    background: #f8f8f8;
+}
+
+.pdf-embed {
+    width: 100% !important;
+    height: 900px;
+    border: none;
+    display: block;
+}
+
+// Tablet
+@media (max-width: 992px) {
+    .pdf-embed {
+        height: 800px;
+    }
+}
+
+// Mobile
+@media (max-width: 768px) {
+    .pdf-embed {
+        height: 700px;
+    }
+}
+
+// Mobile kecil
+@media (max-width: 480px) {
+    .pdf-embed {
+        height: 600px;
+    }
+}

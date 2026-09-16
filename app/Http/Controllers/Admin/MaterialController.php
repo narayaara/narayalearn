@@ -28,14 +28,21 @@ class MaterialController extends Controller
             'subject_id' => 'required|exists:subjects,id',
             'title' => 'required|string|max:128',
             'type' => 'required|in:material,video,exercise',
-            'file' => 'required_if:type,material,exercise|file|mimes:pdf|max:5120',
-            'youtube_url' => 'required_if:type,video|nullable|url',
+            'source_type' => 'required|in:file,link',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'youtube_url' => 'nullable|url',
         ]);
 
-        $data = $request->only('subject_id', 'title', 'type', 'youtube_url');
+        $data = $request->only('subject_id', 'title', 'type');
 
-        if ($request->hasFile('file')) {
+        // Kalo pilih file
+        if ($request->source_type === 'file' && $request->hasFile('file')) {
             $data['file_path'] = $request->file('file')->store('materials', 'public');
+        }
+
+        // Kalo pilih link
+        if ($request->source_type === 'link' && $request->filled('youtube_url')) {
+            $data['youtube_url'] = $request->youtube_url;
         }
 
         Material::create($data);
@@ -54,18 +61,30 @@ class MaterialController extends Controller
         $request->validate([
             'subject_id' => 'required|exists:subjects,id',
             'title' => 'required|string|max:128',
-            'type' => 'required|in:materi,video,latihan',
-            'file' => 'nullable|file|mimes:pdf|max:5120',
+            'type' => 'required|in:material,video,exercise',
+            'source_type' => 'required|in:file,link',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
             'youtube_url' => 'nullable|url',
         ]);
 
-        $data = $request->only('subject_id', 'title', 'type', 'youtube_url');
+        $data = $request->only('subject_id', 'title', 'type');
 
-        if ($request->hasFile('file')) {
+        if ($request->source_type === 'file' && $request->hasFile('file')) {
+            // Hapus file lama
             if ($material->file_path) {
                 Storage::disk('public')->delete($material->file_path);
             }
             $data['file_path'] = $request->file('file')->store('materials', 'public');
+            $data['youtube_url'] = null;
+        }
+
+        if ($request->source_type === 'link' && $request->filled('youtube_url')) {
+            // Hapus file lama kalo ada
+            if ($material->file_path) {
+                Storage::disk('public')->delete($material->file_path);
+            }
+            $data['youtube_url'] = $request->youtube_url;
+            $data['file_path'] = null;
         }
 
         $material->update($data);
