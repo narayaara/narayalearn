@@ -105,11 +105,6 @@
                                     <i class="fas fa-user me-2"></i> My Account
                                 </a>
                             </li>
-                            <li>
-                                <a class="dropdown-item" href="{{ route('profile.index') }}">
-                                    <i class="fas fa-heart me-2"></i> Favorites
-                                </a>
-                            </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item text-danger" href="{{ route('logout') }}"
