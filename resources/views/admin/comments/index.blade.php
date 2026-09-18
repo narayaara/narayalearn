@@ -22,7 +22,7 @@
                         <span class="fw-bold" style="color:#2D1B2E;">
                             {{ $comment->user->name ?? 'Unknown' }}
                         </span>
-                        @if($comment->user && $comment->user->role === 'admin')
+                        @if($comment->is_admin_comment)
                             <span class="badge-admin">Admin</span>
                         @endif
                         <small class="text-muted">

@@ -8,31 +8,29 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    // Store comment (user)
     public function store(Request $request, Material $material)
     {
         $request->validate([
             'content' => 'required|string|max:1000',
+            'reply_to_id' => 'nullable|exists:comments,id',   // ⬅️ GANTI
         ]);
 
         $material->comments()->create([
             'user_id' => auth()->id(),
             'content' => $request->content,
-            'is_admin_comment' => auth()->user()->role === 'admin', // Tandai komentar sebagai admin jika user adalah admin
+            'reply_to_id' => $request->reply_to_id,            // ⬅️ GANTI
+            'is_admin_comment' => auth()->user()->role === 'admin',
         ]);
 
         return redirect()->back()->with('success', 'Komentar berhasil ditambahkan!');
     }
 
-    // Delete comment (user hanya bisa hapus milik sendiri)
     public function destroy(Comment $comment)
     {
-        // Cek apakah user adalah pemilik komentar atau admin
         if (auth()->user()->role === 'admin' || auth()->id() === $comment->user_id) {
             $comment->delete();
             return redirect()->back()->with('success', 'Komentar berhasil dihapus!');
         }
-
         return redirect()->back()->with('error', 'Anda tidak memiliki akses!');
     }
 }

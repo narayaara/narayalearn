@@ -13,6 +13,7 @@ class Comment extends Model
         'content',
         'user_id',
         'material_id',
+        'reply_to_id',          
         'is_admin_comment',
     ];
 
@@ -26,5 +27,17 @@ class Comment extends Model
     public function material()
     {
         return $this->belongsTo(Material::class);
+    }
+
+    // Relasi ke komentar yang dibalas
+    public function replyTo()
+    {
+        return $this->belongsTo(Comment::class, 'reply_to_id');
+    }
+
+    // Relasi ke balasan (replies)
+    public function replies()
+    {
+        return $this->hasMany(Comment::class, 'reply_to_id')->latest();
     }
 }

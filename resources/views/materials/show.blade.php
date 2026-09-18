@@ -110,7 +110,7 @@
             </div>
         @endif
 
-        {{-- PLACEHOLDER (KALO FILE ADA TAPI GAK ADA PREVIEW) --}}
+        {{-- PLACEHOLDER --}}
         @if($hasFile && !$isPdf && !$isImage)
             <div class="text-center py-5">
                 <i class="far fa-file" style="font-size: 60px; color: #ccc;"></i>
@@ -118,7 +118,6 @@
             </div>
         @endif
 
-        {{-- PLACEHOLDER KOSONG --}}
         @if(!$hasFile && !$hasLink)
             <div class="text-center py-5">
                 <i class="far fa-file" style="font-size: 60px; color: #ccc;"></i>
@@ -126,7 +125,6 @@
             </div>
         @endif
 
-        {{-- LINK EKSTERNAL --}}
         @if($hasLink && !$isYoutube && !$isDirectImage)
             <div class="text-center py-5">
                 <i class="fas fa-link" style="font-size: 48px; color: #ccc;"></i>
@@ -138,10 +136,10 @@
         @endif
     </div>
 
-    <!-- Komentar -->
+    <!-- ===== KOMENTAR ===== -->
     <h5 class="fw-bold mb-3" style="color: #2D1B2E;">Comments</h5>
 
-    {{-- Form Komentar --}}
+    {{-- Form Komentar Utama --}}
     @auth
         <form action="{{ route('comments.store', $material) }}" method="POST" class="mb-4">
             @csrf
@@ -175,43 +173,41 @@
         </div>
     @endauth
 
-    {{-- Daftar Komentar --}}
-    @forelse($material->comments()->latest()->get() as $comment)
-        @php $isAdminComment = $comment->is_admin_comment; @endphp
-        <div class="card border-0 rounded-4 p-3 mb-2" style="box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
-            <div class="d-flex justify-content-between align-items-start">
-                <div class="d-flex align-items-center gap-2">
-                    <div class="rounded-circle bg-light d-flex align-items-center justify-content-center"
-                         style="width: 32px; height: 32px;">
-                        <i class="fas fa-user" style="color: #999; font-size: 14px;"></i>
-                    </div>
-                    <span class="fw-semibold small">{{ $comment->user->name ?? 'Unknown' }}</span>
-                    @if($isAdminComment)
-                        <span class="badge-admin">Admin</span>
-                    @endif
-                    <small class="text-muted">{{ $comment->created_at->diffForHumans() }}</small>
-                </div>
+    {{-- Daftar Komentar Utama (cuma yang reply_to_id = null) --}}
+    @php
+        $mainComments = $material->comments()->whereNull('reply_to_id')->latest()->get();
+    @endphp
 
-                @auth
-                    @if(Auth::id() === $comment->user_id || Auth::user()->role === 'admin')
-                        <form action="{{ route('comments.destroy', $comment) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" 
-                                    style="font-size: 0.7rem;"
-                                    onclick="return confirm('Delete this comment?')">
-                                Delete
-                            </button>
-                        </form>
-                    @endif
-                @endauth
-            </div>
-            <p class="mt-2 mb-0 small" style="color: #2D1B2E;">{{ $comment->content }}</p>
-        </div>
+    @forelse($mainComments as $comment)
+        @include('materials.partials.comment', ['comment' => $comment, 'material' => $material])
     @empty
         <div class="card border-0 rounded-4 p-3 text-center" style="box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
             <p class="text-muted small mb-0">Belum ada komentar. Jadilah yang pertama!</p>
         </div>
     @endforelse
 </div>
+
+{{-- Script Toggle Reply & Replies --}}
+<script>
+function toggleReplyForm(commentId) {
+    const form = document.getElementById('reply-form-' + commentId);
+    if (form) form.classList.toggle('d-none');
+}
+
+function toggleReplies(commentId) {
+    const replies = document.getElementById('replies-' + commentId);
+    const chevron = document.getElementById('reply-chevron-' + commentId);
+    
+    if (replies) {
+        replies.classList.toggle('d-none');
+        if (replies.classList.contains('d-none')) {
+            chevron.classList.remove('fa-chevron-up');
+            chevron.classList.add('fa-chevron-down');
+        } else {
+            chevron.classList.remove('fa-chevron-down');
+            chevron.classList.add('fa-chevron-up');
+        }
+    }
+}
+</script>
 @endsection
