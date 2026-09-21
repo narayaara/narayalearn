@@ -71,6 +71,14 @@
 
             <!-- Right Menu -->
             <ul class="navbar-nav ms-auto align-items-md-center gap-2 mt-3 mt-md-0">
+                
+                <!-- Toggle Theme Button (SELALU MUNCUL) -->
+                <li class="nav-item">
+                    <button type="button" class="btn-theme-toggle" id="themeToggle" title="Ganti Tema">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </li>
+
                 @guest
                     <li class="nav-item">
                         <a class="btn btn-auth-nav w-100 w-md-auto" href="{{ route('login') }}">

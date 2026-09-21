@@ -17,6 +17,15 @@
     <!-- Scripts (Vite) -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+    <!-- ===== THEME INIT (HARUS DI HEAD, SEBELUM RENDER) ===== -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme') || 
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        })();
+    </script>
+
     @stack('styles')
 </head>
 <body>
@@ -37,6 +46,48 @@
 
     <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- ===== THEME TOGGLE SCRIPT ===== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const html = document.documentElement;
+        const toggle = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+
+        // Update icon sesuai tema saat ini
+        function updateIcon() {
+            const current = html.getAttribute('data-theme');
+            if (icon) {
+                if (current === 'dark') {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            }
+        }
+        updateIcon();
+
+        // Klik toggle
+        if (toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                const current = html.getAttribute('data-theme') || 'light';
+                const next = current === 'dark' ? 'light' : 'dark';
+                
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('theme', next);
+                updateIcon();
+                
+                console.log('✅ Theme changed to:', next);
+            });
+        } else {
+            console.log('❌ Tombol toggle #themeToggle tidak ditemukan!');
+        }
+    });
+    </script>
+
     @stack('scripts')
 </body>
 </html>

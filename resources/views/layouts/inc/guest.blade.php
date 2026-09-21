@@ -39,6 +39,19 @@
         </div>
     </div>
 
+    <script>
+    // ==============================================
+    // THEME TOGGLE (Light / Dark Mode)
+    // ==============================================
+    (function() {
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+        html.setAttribute('data-theme', initialTheme);
+    })();
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
