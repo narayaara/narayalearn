@@ -234,6 +234,20 @@ body {
     }
 }
 
+html, body {
+    height: 100%;
+}
+
+#app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
 // ==============================================
 // TOGGLE THEME BUTTON
 // ==============================================
@@ -342,17 +356,17 @@ body {
 
 .pdf-embed {
     width: 100% !important;
-    height: 900px;
+    height: 450px;
     border: none;
     display: block;
 }
 
 @media (max-width: 992px) {
-    .pdf-embed { height: 800px; }
+    .pdf-embed { height: 400px; }
 }
 
 @media (max-width: 768px) {
-    .pdf-embed { height: 700px; }
+    .pdf-embed { height: 350px; }
     .footer-pink { text-align: center; }
     .social-icon {
         width: 34px;
@@ -362,7 +376,7 @@ body {
 }
 
 @media (max-width: 480px) {
-    .pdf-embed { height: 600px; }
+    .pdf-embed { height: 300px; }
 }
 
 // ==============================================
@@ -850,3 +864,27 @@ body {
         color: #5A4A52 !important;
         border-color: #3A2A32 !important;
     }
+
+
+    // ==============================================
+// SUBJECT DETAIL PAGE
+// ==============================================
+.card-material {
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.2) !important;
+    }
+}
+
+.min-width-0 {
+    min-width: 0;
+}
+
+// Dark mode override
+[data-theme="dark"] {
+    .card-material:hover {
+        box-shadow: 0 8px 25px rgba(255, 143, 181, 0.25) !important;
+    }
+}

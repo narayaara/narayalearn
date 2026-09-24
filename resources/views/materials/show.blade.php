@@ -104,7 +104,7 @@
         @if($isPdf)
             <div class="pdf-wrapper">
                 <embed 
-                    src="{{ asset('storage/' . $material->file_path) }}#toolbar=0&navpanes=0&scrollbar=1&view=FitH" 
+                    src="{{ asset('storage/' . $material->file_path) }}#toolbar=0&navpanes=0&scrollbar=1&zoom=75" 
                     type="application/pdf" 
                     class="pdf-embed">
             </div>

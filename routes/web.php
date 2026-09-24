@@ -15,6 +15,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 // ====================
 Route::get('/subjects', [App\Http\Controllers\SubjectContentController::class, 'index'])->name('subjects.index');
 Route::get('/subjects/{subject}', [App\Http\Controllers\SubjectContentController::class, 'show'])->name('subjects.show');
+Route::get('/subjects/{subject}/topics/{topic}', [App\Http\Controllers\SubjectContentController::class, 'showTopic'])->name('subjects.topic');
 Route::get('/materials/{material}', [App\Http\Controllers\SubjectContentController::class, 'showMaterial'])->name('materials.show');
 Route::get('/materials/{material}/download', [App\Http\Controllers\SubjectContentController::class, 'download'])->name('materials.download');
 

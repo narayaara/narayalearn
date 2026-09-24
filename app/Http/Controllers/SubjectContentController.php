@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subject;
-use App\Models\Material;
 use Illuminate\Support\Facades\Storage;
 
 class SubjectContentController extends Controller
@@ -16,26 +15,23 @@ class SubjectContentController extends Controller
 
     public function show(Subject $subject)
     {
-        $materials = $subject->materials()->get()->groupBy('type');
-        return view('subjects.show', compact('subject', 'materials'));
+        // Ambil daftar topik unik (title yang sama dipakai 3x: materi/video/latihan)
+        $topics = $subject->materials()->select('title')->distinct()->pluck('title');
+        return view('subjects.show', compact('subject', 'topics'));
     }
 
-    public function showMaterial(Material $material)
+    public function showTopic(Subject $subject, $topic)
     {
-        $material->load(['comments.user', 'subject']);
-        $isFavorited = auth()->check()
-            ? $material->favoritedBy()->where('user_id', auth()->id())->exists()
-            : false;
-
-        return view('materials.show', compact('material', 'isFavorited'));
+        $materials = $subject->materials()->where('title', $topic)->get()->keyBy('type');
+        return view('subjects.topic', compact('subject', 'topic', 'materials'));
     }
 
-    public function download(Material $material)
+    public function download($material)
     {
+        $material = \App\Models\Material::findOrFail($material);
         if (!$material->file_path) {
             abort(404);
         }
-
         return Storage::disk('public')->download($material->file_path, $material->title . '.pdf');
     }
 }
