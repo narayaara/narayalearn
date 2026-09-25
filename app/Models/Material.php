@@ -17,27 +17,39 @@ class Material extends Model
         'subject_id',
     ];
 
-    // Relasi ke Subject
     public function subject()
     {
         return $this->belongsTo(Subject::class);
     }
 
-    // Relasi ke Comment
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
 
-    // Relasi ke Favorite
     public function favorites()
     {
         return $this->hasMany(Favorite::class);
     }
 
-    // Relasi ke User melalui Favorite
     public function favoritedBy()
     {
         return $this->hasMany(Favorite::class);
+    }
+
+    public function getYoutubeEmbedUrlAttribute()
+    {
+        if (!$this->youtube_link) {
+            return null;
+        }
+
+        if (str_contains($this->youtube_link, 'youtu.be/')) {
+            $id = basename(parse_url($this->youtube_link, PHP_URL_PATH));
+        } else {
+            parse_str(parse_url($this->youtube_link, PHP_URL_QUERY) ?? '', $query);
+            $id = $query['v'] ?? null;
+        }
+
+        return $id ? 'https://www.youtube.com/embed/' . $id : null;
     }
 }

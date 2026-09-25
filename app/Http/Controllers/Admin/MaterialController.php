@@ -35,14 +35,12 @@ class MaterialController extends Controller
 
         $data = $request->only('subject_id', 'title', 'type');
 
-        // Kalo pilih file
         if ($request->source_type === 'file' && $request->hasFile('file')) {
             $data['file_path'] = $request->file('file')->store('materials', 'public');
         }
 
-        // Kalo pilih link
         if ($request->source_type === 'link' && $request->filled('youtube_url')) {
-            $data['youtube_url'] = $request->youtube_url;
+            $data['youtube_link'] = $request->youtube_url;
         }
 
         Material::create($data);
@@ -75,15 +73,14 @@ class MaterialController extends Controller
                 Storage::disk('public')->delete($material->file_path);
             }
             $data['file_path'] = $request->file('file')->store('materials', 'public');
-            $data['youtube_url'] = null;
+            $data['youtube_link'] = null;
         }
 
         if ($request->source_type === 'link' && $request->filled('youtube_url')) {
-            // Hapus file lama kalo ada
             if ($material->file_path) {
                 Storage::disk('public')->delete($material->file_path);
             }
-            $data['youtube_url'] = $request->youtube_url;
+            $data['youtube_link'] = $request->youtube_url;
             $data['file_path'] = null;
         }
 

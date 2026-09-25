@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Subject;
+use App\Models\Material;
 use Illuminate\Support\Facades\Storage;
 
 class SubjectContentController extends Controller
@@ -33,5 +34,11 @@ class SubjectContentController extends Controller
             abort(404);
         }
         return Storage::disk('public')->download($material->file_path, $material->title . '.pdf');
+    }
+
+    public function showMaterial(Material $material)
+    {
+        $material->load('subject');
+        return view('materials.show', compact('material'));
     }
 }
