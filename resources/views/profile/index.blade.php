@@ -96,27 +96,58 @@
         </div>
     </div>
 
-    <!-- ===== FAVORITES ===== -->
-    <div class="mb-4">
-        <h6 class="fw-bold mb-3" style="color: #2D1B2E;">My Favorites</h6>
-        <div class="card border-0 rounded-4 p-3" style="box-shadow: 0 2px 12px rgba(0,0,0,0.06);">
-            @forelse ($favorites as $material)
-                <a href="{{ route('materials.show', $material) }}" 
-                   class="d-flex align-items-center justify-content-between p-3 rounded-3 mb-2 text-decoration-none"
-                   style="background: #FAFAFA; transition: all 0.2s;">
-                    <div class="d-flex align-items-center gap-3">
-                        <i class="far fa-file-alt" style="color: #999; font-size: 18px;"></i>
-                        <span style="color: #2D1B2E; font-weight: 500;">{{ $material->title }}</span>
-                    </div>
-                    <small class="text-muted">{{ $material->subject->name ?? '-' }}</small>
-                </a>
-            @empty
-                <p class="text-muted small mb-0 text-center py-3">
-                    Belum ada favorite.
-                </p>
-            @endforelse
+    <!-- Topik Favorit -->
+    <h5 class="fw-bold mb-3" style="color: var(--text-dark);">
+        <i class="fas fa-bookmark me-2" style="color: var(--pink-primary);"></i>
+        Topik Favorit
+    </h5>
+
+    @if($favoriteTopics->count() > 0)
+        <div class="row g-2 mb-4">
+            @foreach($favoriteTopics as $fav)
+                <div class="col-md-6">
+                    <a href="{{ route('subjects.topic', [$fav->subject, $fav->topic_name]) }}" 
+                    class="text-decoration-none">
+                        <div class="card border-0 rounded-3 p-3" style="background: var(--bg-soft);">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-bookmark" style="color: var(--pink-primary);"></i>
+                                <span class="fw-semibold" style="color: var(--text-dark);">{{ $fav->topic_name }}</span>
+                                <small style="color: var(--text-muted);">• {{ $fav->subject->name ?? '-' }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
         </div>
-    </div>
+    @else
+        <p class="text-muted small mb-4">Belum ada topik yang difavoritkan.</p>
+    @endif
+
+    <!-- Materi Favorit -->
+    <h5 class="fw-bold mb-3" style="color: var(--text-dark);">
+        <i class="fas fa-heart me-2" style="color: var(--pink-primary);"></i>
+        Materi Favorit
+    </h5>
+
+    @if($favoriteMaterials->count() > 0)
+        <div class="row g-2">
+            @foreach($favoriteMaterials as $fav)
+                <div class="col-md-6">
+                    <a href="{{ route('materials.show', $fav->material) }}" class="text-decoration-none">
+                        <div class="card border-0 rounded-3 p-3" style="background: var(--bg-soft);">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="fas fa-file-alt" style="color: var(--pink-primary);"></i>
+                                <span class="fw-semibold" style="color: var(--text-dark);">{{ $fav->material->title ?? '-' }}</span>
+                                <small style="color: var(--text-muted);">• {{ $fav->material->subject->name ?? '-' }}</small>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    @else
+        <p class="text-muted small">Belum ada materi yang difavoritkan.</p>
+    @endif
 
     <!-- ===== COMMENTS ===== -->
     <div class="mb-4">

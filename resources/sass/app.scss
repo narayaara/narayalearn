@@ -4,11 +4,10 @@
 @import 'variables';
 @import 'bootstrap/scss/bootstrap';
 
-// Font
 @import url('https://fonts.bunny.net/css?family=Nunito:400,600,700');
 
 // ==============================================
-// THEME COLORS
+// THEME COLORS — LIGHT (Default)
 // ==============================================
 :root {
     --pink-primary: #FF6B9D;
@@ -29,6 +28,9 @@
     --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
+// ==============================================
+// THEME COLORS — DARK
+// ==============================================
 [data-theme="dark"] {
     --pink-primary: #FF8FB5;
     --pink-light: #4A2A3A;
@@ -51,14 +53,28 @@
 // ==============================================
 // GLOBAL
 // ==============================================
+html, body {
+    height: 100%;
+}
+
 body {
     background-color: var(--bg-body) !important;
     color: var(--text-dark) !important;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+#app {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
 // ==============================================
-// NAVBAR PINK
+// NAVBAR
 // ==============================================
 .navbar-pink {
     background: var(--bg-navbar) !important;
@@ -184,7 +200,7 @@ body {
 }
 
 // ==============================================
-// CARD PINK
+// CARDS
 // ==============================================
 .card,
 .card-pink {
@@ -234,22 +250,8 @@ body {
     }
 }
 
-html, body {
-    height: 100%;
-}
-
-#app {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-main {
-    flex: 1;
-}
-
 // ==============================================
-// TOGGLE THEME BUTTON
+// TOGGLE THEME
 // ==============================================
 .btn-theme-toggle {
     background: rgba(255, 255, 255, 0.2);
@@ -273,7 +275,7 @@ main {
 }
 
 // ==============================================
-// AUTH PAGES (Login & Register)
+// AUTH PAGES
 // ==============================================
 .auth-page {
     min-height: 100vh;
@@ -345,52 +347,348 @@ main {
 }
 
 // ==============================================
-// PDF PREVIEW
+// SUBJECT / TOPIC CARD
 // ==============================================
-.pdf-wrapper {
-    width: 100%;
-    overflow: hidden;
-    border-radius: 12px;
-    background: #f8f8f8;
-}
+.card-material {
+    transition: all 0.3s ease;
 
-.pdf-embed {
-    width: 100% !important;
-    height: 450px;
-    border: none;
-    display: block;
-}
-
-@media (max-width: 992px) {
-    .pdf-embed { height: 400px; }
-}
-
-@media (max-width: 768px) {
-    .pdf-embed { height: 350px; }
-    .footer-pink { text-align: center; }
-    .social-icon {
-        width: 34px;
-        height: 34px;
-        font-size: 14px;
+    &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.2) !important;
     }
 }
 
-@media (max-width: 480px) {
-    .pdf-embed { height: 300px; }
+.min-width-0 {
+    min-width: 0;
 }
 
 // ==============================================
-// DARK MODE — FULL OVERRIDE
+// ADMIN SIDEBAR
+// ==============================================
+.admin-shell {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    min-height: calc(100vh - 90px);
+    display: flex;
+}
+
+.admin-sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    padding-bottom: 24px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-light);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.admin-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 20px;
+    border-bottom: 1px solid var(--border-light);
+
+    i {
+        font-size: 26px;
+        color: var(--pink-primary);
+    }
+}
+
+.admin-sidebar-brand-text {
+    h6 {
+        font-weight: 700;
+        color: var(--text-dark);
+        margin-bottom: 0;
+    }
+
+    small {
+        color: var(--text-gray);
+    }
+}
+
+.admin-sidebar-nav {
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    color: var(--text-gray) !important;
+    text-decoration: none !important;
+    font-size: 0.92rem;
+    margin-bottom: 4px;
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: var(--pink-light);
+        color: var(--pink-primary) !important;
+    }
+
+    &.active {
+        background: var(--pink-primary);
+        color: #fff !important;
+        font-weight: 600;
+    }
+}
+
+.admin-sidebar-divider {
+    border-color: var(--border-light);
+    margin: 8px 4px;
+    opacity: 1;
+}
+
+.admin-main {
+    flex-grow: 1;
+    min-width: 0;
+    background: var(--bg-soft);
+    padding: 28px;
+    transition: background-color 0.3s ease;
+}
+
+// ==============================================
+// QUICK ACTION CARD
+// ==============================================
+.quick-action-card {
+    background: linear-gradient(135deg, var(--bg-soft), var(--pink-light));
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(255, 107, 157, 0.15) !important;
+    }
+}
+
+// ==============================================
+// MATERIAL VIEWER PAGE
+// ==============================================
+.material-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.material-type-badge {
+    background: var(--pink-light);
+    color: var(--pink-primary);
+    font-weight: 600;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+}
+
+.material-toolbar-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.material-download-btn {
+    background: var(--pink-primary);
+    color: #fff;
+    border: none;
+
+    &:hover {
+        background: var(--pink-dark);
+        color: #fff;
+    }
+}
+
+// ===== PDF =====
+.material-pdf-frame {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    aspect-ratio: 210 / 297;
+    max-height: 85vh;
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-soft);
+    box-shadow: var(--shadow-card);
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+}
+
+// ===== VIDEO =====
+.material-video-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: var(--shadow-card);
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+    }
+}
+
+// ===== IMAGE =====
+.material-image-frame {
+    position: relative;
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--bg-soft);
+    box-shadow: var(--shadow-card);
+    cursor: zoom-in;
+    text-align: center;
+
+    img {
+        width: 100%;
+        max-height: 70vh;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
+        background: var(--bg-card);
+    }
+}
+
+.material-image-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    font-size: 0.78rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    pointer-events: none;
+}
+
+// ===== LIGHTBOX =====
+.material-lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    background: #000;
+    z-index: 1050;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    cursor: zoom-out;
+
+    &.is-open {
+        display: flex;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        cursor: default;
+    }
+}
+
+body.lightbox-open {
+    overflow: hidden;
+}
+
+.material-lightbox-close {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+    z-index: 1051;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+}
+
+.material-empty-state {
+    border: 1px dashed var(--border-light);
+    border-radius: 16px;
+    background: var(--bg-soft);
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-gray);
+
+    i {
+        font-size: 40px;
+        color: var(--pink-primary);
+        margin-bottom: 12px;
+        display: block;
+    }
+}
+
+// ==============================================
+// FAVORITE BUTTON
+// ==============================================
+.favorite-btn-form {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    margin: 0;
+}
+
+.favorite-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--bg-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    color: var(--text-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(1.1);
+        color: var(--pink-primary);
+    }
+
+    &.is-favorited {
+        color: var(--pink-primary);
+    }
+}
+
+// ==============================================
+// DARK MODE OVERRIDES
 // ==============================================
 [data-theme="dark"] {
-    
-    // ===== BODY =====
-    body {
-        background-color: #1A1114 !important;
-        color: #F0E8EC !important;
-    }
 
-    // ===== TEXT — SEMUA =====
+    // ===== TEXT =====
     h1, h2, h3, h4, h5, h6,
     p, span, label, strong, div,
     .fw-bold, .fw-semibold,
@@ -398,13 +696,11 @@ main {
         color: #F0E8EC !important;
     }
 
-    // Hero heading dengan span pink
     h1 span,
     .display-4 span {
         color: #FF8FB5 !important;
     }
 
-    // Text muted
     .text-muted,
     small.text-muted,
     small {
@@ -415,7 +711,6 @@ main {
         color: #B0A0A8 !important;
     }
 
-    // Link
     a {
         color: #FF8FB5 !important;
 
@@ -463,15 +758,11 @@ main {
         box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
     }
 
-    .card-header {
-        background-color: #241820 !important;
-        color: #F0E8EC !important;
-        border-color: #3A2A32 !important;
-    }
-
+    .card-header,
     .card-body {
         background-color: #241820 !important;
         color: #F0E8EC !important;
+        border-color: #3A2A32 !important;
     }
 
     // ===== FORM =====
@@ -535,11 +826,6 @@ main {
         background: #FF8FB5 !important;
         color: #1A1114 !important;
         border-color: #FF8FB5 !important;
-
-        &:hover {
-            background: #FF6B9D !important;
-            color: #1A1114 !important;
-        }
     }
 
     .btn-auth-nav-outline {
@@ -698,7 +984,7 @@ main {
         background-color: #2A1B22 !important;
     }
 
-    // ===== AUTH PAGES (Login & Register) =====
+    // ===== AUTH PAGES =====
     .auth-page {
         background: linear-gradient(135deg, #2A1B22 0%, #4A2A3A 50%, #1A1114 100%) !important;
     }
@@ -717,47 +1003,15 @@ main {
         background: #2A1B22 !important;
         color: #F0E8EC !important;
         border-color: #3A2A32 !important;
-
-        &::placeholder {
-            color: #80707A !important;
-        }
-
-        &:focus {
-            background: #2A1B22 !important;
-            color: #F0E8EC !important;
-            border-color: #FF8FB5 !important;
-        }
     }
 
     .auth-card .auth-link {
         color: #FF8FB5 !important;
-
-        &:hover {
-            color: #FFB0C8 !important;
-        }
-    }
-
-    .auth-card .form-check-label {
-        color: #B0A0A8 !important;
     }
 
     .auth-card .btn-auth {
         background: #FF8FB5 !important;
         color: #1A1114 !important;
-
-        &:hover {
-            background: #FF6B9D !important;
-            color: #1A1114 !important;
-        }
-    }
-
-    // ===== HERO SECTION =====
-    h1.display-4 {
-        color: #F0E8EC !important;
-
-        span {
-            color: #FF8FB5 !important;
-        }
     }
 
     // ===== BG UTILS =====
@@ -776,11 +1030,12 @@ main {
     }
 
     // ===== PDF =====
-    .pdf-wrapper {
+    .pdf-wrapper,
+    .pdf-embed {
         background: #1A1114 !important;
     }
 
-    // ===== COMMENT SECTION =====
+    // ===== COMMENT =====
     .rounded-circle.bg-light {
         background-color: #3A2A32 !important;
 
@@ -794,9 +1049,6 @@ main {
         background: rgba(255, 255, 255, 0.15) !important;
         border-color: rgba(255, 255, 255, 0.25) !important;
         color: #fff !important;
-    }
-
-    // ===== TOGGLE TOMBOL =====
     }
 
     // ===== HORIZONTAL LINE =====
@@ -865,125 +1117,28 @@ main {
         border-color: #3A2A32 !important;
     }
 
-
-    // ==============================================
-// SUBJECT DETAIL PAGE
-// ==============================================
-.card-material {
-    transition: all 0.3s ease;
-
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(255, 107, 157, 0.2) !important;
-    }
-}
-
-.min-width-0 {
-    min-width: 0;
-}
-
-// Dark mode override
-[data-theme="dark"] {
+    // ===== CARD MATERIAL HOVER =====
     .card-material:hover {
         box-shadow: 0 8px 25px rgba(255, 143, 181, 0.25) !important;
     }
 }
 
 // ==============================================
-// ADMIN SIDEBAR
+// RESPONSIVE
 // ==============================================
-
-// Breakout full lebar viewport, lepas dari padding container bawaan
-.admin-shell {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
-    min-height: calc(100vh - 90px);
-}
-
-.admin-sidebar {
-    width: 240px;
-    flex-shrink: 0;
-    padding-bottom: 24px;
-    background: var(--bg-card);
-    border-right: 1px solid var(--border-light);
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.admin-sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 22px 20px;
-    border-bottom: 1px solid var(--border-light);
-
-    i {
-        font-size: 26px;
-        color: var(--pink-primary);
-    }
-}
-
-.admin-sidebar-brand-text {
-    h6 {
-        font-weight: 700;
-        color: var(--text-dark);
-        margin-bottom: 0;
-    }
-
-    small {
-        color: var(--text-gray);
-    }
-}
-
-.admin-sidebar-nav {
-    padding: 16px 12px;
-    display: flex;
-    flex-direction: column;
-}
-
-.admin-nav-link {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    color: var(--text-gray) !important;
-    text-decoration: none !important;
-    font-size: 0.92rem;
-    margin-bottom: 4px;
-    border: none;
-    background: transparent;
-    width: 100%;
-    text-align: left;
-    transition: all 0.2s ease;
-
-    &:hover {
-        background: var(--pink-light);
-        color: var(--pink-primary) !important;
-    }
-
-    &.active {
-        background: var(--pink-primary);
-        color: #fff !important;
-        font-weight: 600;
-    }
-}
-
-.admin-sidebar-divider {
-    border-color: var(--border-light);
-    margin: 8px 4px;
-    opacity: 1;
-}
-
-.admin-main {
-    flex-grow: 1;
-    min-width: 0;
-    background: var(--bg-soft);
-    padding: 28px;
-    transition: background-color 0.3s ease;
+@media (max-width: 992px) {
+    .pdf-embed { height: 400px; }
 }
 
 @media (max-width: 768px) {
+    .pdf-embed { height: 350px; }
+    .footer-pink { text-align: center; }
+    .social-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 14px;
+    }
+
     .admin-shell {
         flex-direction: column;
     }
@@ -1000,20 +1155,45 @@ main {
     .admin-nav-link {
         width: auto;
     }
+
+    .material-image-frame img {
+        max-height: 55vh;
+    }
+
+    .material-toolbar-actions {
+        width: 100%;
+    }
+
+    .material-toolbar-actions .btn {
+        flex: 1;
+    }
+
+    .material-lightbox-close {
+        top: 12px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pdf-embed { height: 300px; }
 }
 
 // ==============================================
-// ADMIN DASHBOARD - QUICK ACTION CARDS
+// PDF EMBED (untuk materials/show.blade.php)
 // ==============================================
+.pdf-wrapper {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--bg-soft);
+}
 
-// Pakai var(...) langsung, bukan hex mati, biar otomatis
-// ganti warna pas dark mode tanpa perlu selector [style*="..."]
-.quick-action-card {
-    background: linear-gradient(135deg, var(--bg-soft), var(--pink-light));
-    transition: all 0.3s ease;
-
-    &:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(255, 107, 157, 0.15) !important;
-    }
+.pdf-embed {
+    width: 100% !important;
+    height: 450px;
+    border: none;
+    display: block;
 }

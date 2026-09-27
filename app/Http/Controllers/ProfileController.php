@@ -6,16 +6,29 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Favorite;
 
 class ProfileController extends Controller
 {
     public function index(Request $request): View
     {
         $user = $request->user();
-        $favorites = $user->favorites()->with('material.subject')->latest()->get();
+
+        $favoriteMaterials = Favorite::with('material.subject')
+            ->where('user_id', $user->id)
+            ->where('type', 'material')
+            ->latest()
+            ->get();
+
+        $favoriteTopics = Favorite::with('subject')
+            ->where('user_id', $user->id)
+            ->where('type', 'topic')
+            ->latest()
+            ->get();
+
         $comments = $user->comments()->with('material')->latest()->get();
 
-        return view('profile.index', compact('user', 'favorites', 'comments'));
+        return view('profile.index', compact('user', 'favoriteMaterials', 'favoriteTopics', 'comments'));
     }
 
     public function update(Request $request)

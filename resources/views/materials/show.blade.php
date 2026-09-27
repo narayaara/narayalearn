@@ -28,44 +28,112 @@
         </ol>
     </nav>
 
-    <!-- Header -->
-    <div class="mb-4">
-        <span class="badge rounded-pill mb-2" style="background: var(--pink-light); color: var(--pink-primary);">
-            {{ $material->type_label }}
-        </span>
-        <h3 class="fw-bold mb-0" style="color: var(--text-dark);">
-            {{ $material->title }}
-        </h3>
+    @php
+        $ext = $material->file_path ? strtolower(pathinfo($material->file_path, PATHINFO_EXTENSION)) : null;
+        $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
+        $fileUrl = $material->file_path ? Storage::url($material->file_path) : null;
+        $isVideo = $material->type === 'video';
+    @endphp
+
+    <!-- Toolbar: badge + judul + aksi -->
+    <div class="material-toolbar mb-3">
+        <div class="material-toolbar-info">
+            <span class="badge rounded-pill material-type-badge">
+                <i class="fas {{ $isVideo ? 'fa-video' : ($material->type === 'exercise' ? 'fa-pen' : 'fa-file-alt') }} me-1"></i>
+                {{ $material->type_label }}
+            </span>
+            <h3 class="fw-bold mb-0 mt-2" style="color: var(--text-dark);">
+                {{ $material->title }}
+            </h3>
+        </div>
+
+        <div class="material-toolbar-actions">
+            {{-- ===== TOMBOL FAVORITE ===== --}}
+            @auth
+                <form action="{{ route('favorites.toggle', $material) }}" method="POST" class="d-inline">
+                    @csrf
+                    <button type="submit" 
+                            class="btn btn-sm rounded-3 {{ ($isFavorited ?? false) ? 'btn-pink' : 'btn-outline-secondary' }}">
+                        <i class="{{ ($isFavorited ?? false) ? 'fas' : 'far' }} fa-heart me-1"></i>
+                        {{ ($isFavorited ?? false) ? 'Favorited' : 'Favorite' }}
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary rounded-3">
+                    <i class="far fa-heart me-1"></i> Favorite
+                </a>
+            @endauth
+
+            {{-- Tombol Video YouTube --}}
+            @if($isVideo && $material->youtube_link)
+                <a href="{{ $material->youtube_link }}" target="_blank" rel="noopener"
+                   class="btn btn-outline-secondary btn-sm rounded-3">
+                    <i class="fab fa-youtube me-1"></i> Buka di YouTube
+                </a>
+            @elseif($fileUrl)
+                {{-- Tombol File (PDF/Gambar) --}}
+                <a href="{{ $fileUrl }}" target="_blank" rel="noopener"
+                   class="btn btn-outline-secondary btn-sm rounded-3">
+                    <i class="fas fa-up-right-from-square me-1"></i> Buka di Tab Baru
+                </a>
+                <a href="{{ route('materials.download', $material) }}" class="btn btn-sm rounded-3 material-download-btn">
+                    <i class="fas fa-download me-1"></i> Download
+                </a>
+            @endif
+        </div>
     </div>
 
     <!-- Konten -->
-    <div class="card border-0 rounded-4 p-3 mb-3" style="background: var(--bg-card); box-shadow: var(--shadow-card);">
-        @if($material->type === 'video')
-            @if($material->youtube_embed_url)
-                <div class="ratio ratio-16x9 rounded-3 overflow-hidden">
-                    <iframe src="{{ $material->youtube_embed_url }}"
-                            title="{{ $material->title }}"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe>
-                </div>
-            @else
-                <p class="text-muted text-center my-4 mb-0">Video belum tersedia.</p>
-            @endif
+    @if($isVideo)
+        @if($material->youtube_embed_url)
+            <div class="material-video-frame">
+                <iframe src="{{ $material->youtube_embed_url }}"
+                        title="{{ $material->title }}"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+            </div>
         @else
-            {{-- type: material atau exercise, sama-sama dokumen PDF --}}
-            @if($material->file_path)
-                <div class="rounded-3 overflow-hidden mb-3" style="border: 1px solid rgba(0,0,0,0.08); height: 75vh;">
-                    <iframe src="{{ Storage::url($material->file_path) }}" width="100%" height="100%" style="border: none;"></iframe>
-                </div>
-                <a href="{{ route('materials.download', $material) }}" class="btn text-white rounded-3"
-                   style="background: var(--pink-primary);">
-                    <i class="fas fa-download me-1"></i> Download PDF
-                </a>
-            @else
-                <p class="text-muted text-center my-4 mb-0">Dokumen belum tersedia.</p>
-            @endif
+            <div class="material-empty-state">
+                <i class="fas fa-video-slash"></i>
+                <p class="mb-0">Video belum tersedia.</p>
+            </div>
         @endif
-    </div>
+    @elseif($fileUrl && $isImage)
+        <div class="material-image-frame" onclick="openMaterialLightbox()">
+            <img src="{{ $fileUrl }}" alt="{{ $material->title }}">
+            <div class="material-image-hint">
+                <i class="fas fa-expand"></i> Ketuk untuk perbesar
+            </div>
+        </div>
+
+        <!-- Lightbox -->
+        <div id="materialLightbox" class="material-lightbox" onclick="closeMaterialLightbox()">
+            <button type="button" class="material-lightbox-close" aria-label="Tutup" onclick="closeMaterialLightbox()">
+                <i class="fas fa-xmark"></i>
+            </button>
+            <img src="{{ $fileUrl }}" alt="{{ $material->title }}" onclick="event.stopPropagation()">
+        </div>
+
+        <script>
+            function openMaterialLightbox() {
+                document.getElementById('materialLightbox').classList.add('is-open');
+                document.body.classList.add('lightbox-open');
+            }
+            function closeMaterialLightbox() {
+                document.getElementById('materialLightbox').classList.remove('is-open');
+                document.body.classList.remove('lightbox-open');
+            }
+        </script>
+    @elseif($fileUrl)
+        <div class="material-pdf-frame">
+            <iframe src="{{ $fileUrl }}#toolbar=0" title="{{ $material->title }}"></iframe>
+        </div>
+    @else
+        <div class="material-empty-state">
+            <i class="fas fa-file-circle-question"></i>
+            <p class="mb-0">Dokumen belum tersedia.</p>
+        </div>
+    @endif
 
     <!-- Tombol Kembali -->
     <div class="text-center mt-4">

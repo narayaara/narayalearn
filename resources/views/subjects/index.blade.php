@@ -26,7 +26,7 @@
                         <h5 class="mt-3 fw-bold" style="color: #2D1B2E;">{{ $subject->name }}</h5>
                         <p class="text-muted small mb-0">
                             <i class="fas fa-file-alt me-1"></i> 
-                            {{ $subject->materials_count ?? 0 }} Materi
+                            {{ $subject->topics_count ?? 0 }} Topics
                         </p>
                         <span class="btn btn-pink btn-sm mt-3">
                             Lihat Konten <i class="fas fa-arrow-right ms-1"></i>

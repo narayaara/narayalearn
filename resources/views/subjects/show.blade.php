@@ -6,10 +6,10 @@
 <div class="container py-4" style="max-width: 1100px;">
 
     <!-- Header Subject -->
-    <div class="mb-4 p-4 rounded-4" 
+    <div class="mb-4 p-4 rounded-4"
          style="background: var(--pink-soft); box-shadow: var(--shadow-card);">
         <h2 class="fw-bold mb-1" style="color: var(--text-dark);">
-            <i class="fas fa-book me-2" style="color: var(--pink-primary);"></i> 
+            <i class="fas fa-book me-2" style="color: var(--pink-primary);"></i>
             {{ $subject->name }}
         </h2>
         <p class="mb-0 small" style="color: var(--text-gray);">
@@ -20,10 +20,9 @@
     <!-- Daftar Topik -->
     @if(isset($topics) && count($topics) > 0)
         <div class="row g-3">
-            @foreach ($topics as $topic)
+            @foreach ($topics as $title => $material)
                 <div class="col-md-6 col-lg-4">
-                    <a href="{{ route('subjects.topic', [$subject, $topic]) }}" 
-                       class="text-decoration-none d-block h-100">
+                    <a href="{{ route('subjects.topic', [$subject, $title]) }}" class="text-decoration-none d-block h-100">
                         <div class="card-material card border-0 rounded-4 p-3 h-100"
                              style="background: var(--bg-card); box-shadow: var(--shadow-card);">
                             <div class="d-flex align-items-center gap-3">
@@ -36,7 +35,7 @@
                                 <!-- Title -->
                                 <div class="flex-grow-1 min-width-0">
                                     <span class="fw-bold d-block text-truncate" style="color: var(--text-dark);">
-                                        {{ $topic }}
+                                        {{ $title }}
                                     </span>
                                 </div>
 

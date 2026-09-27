@@ -57,3 +57,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/comments', [App\Http\Controllers\Admin\CommentController::class, 'index'])->name('comments.index');
     Route::delete('/comments/{comment}', [App\Http\Controllers\Admin\CommentController::class, 'destroy'])->name('comments.destroy');
 });
+
+Route::middleware(['auth'])->group(function () {
+    // ... route yang udah ada ...
+    
+    // Toggle favorite TOPIK
+    Route::post('/subjects/{subject}/favorite-topic', 
+        [App\Http\Controllers\FavoriteController::class, 'toggleTopic']
+    )->name('favorites.toggleTopic');
+});

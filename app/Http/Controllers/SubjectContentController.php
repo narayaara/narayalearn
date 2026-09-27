@@ -2,43 +2,76 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subject;
+use App\Models\Favorite;
 use App\Models\Material;
+use App\Models\Subject;
 use Illuminate\Support\Facades\Storage;
 
 class SubjectContentController extends Controller
 {
     public function index()
     {
-        $subjects = Subject::withCount('materials')->get();
+        $subjects = Subject::all()->map(function ($subject) {
+            $topicCount = $subject->materials()
+                ->distinct()
+                ->pluck('title')
+                ->count();
+            
+            $subject->topics_count = $topicCount;
+            return $subject;
+        });
+
         return view('subjects.index', compact('subjects'));
     }
 
     public function show(Subject $subject)
     {
-        // Ambil daftar topik unik (title yang sama dipakai 3x: materi/video/latihan)
-        $topics = $subject->materials()->select('title')->distinct()->pluck('title');
-        return view('subjects.show', compact('subject', 'topics'));
+        $grouped = $subject->materials()->get()->groupBy('title');
+
+        $topics = $grouped->map(function ($group) {
+            return $group->firstWhere('type', 'material') ?? $group->first();
+        });
+
+        $favoriteIds = Favorite::where('user_id', auth()->id())->pluck('material_id')->toArray();
+
+        return view('subjects.show', compact('subject', 'topics', 'favoriteIds'));
     }
 
     public function showTopic(Subject $subject, $topic)
     {
         $materials = $subject->materials()->where('title', $topic)->get()->keyBy('type');
-        return view('subjects.topic', compact('subject', 'topic', 'materials'));
-    }
 
-    public function download($material)
-    {
-        $material = \App\Models\Material::findOrFail($material);
-        if (!$material->file_path) {
-            abort(404);
-        }
-        return Storage::disk('public')->download($material->file_path, $material->title . '.pdf');
+        $isTopicFavorited = auth()->check()
+            ? Favorite::where('user_id', auth()->id())
+                ->where('subject_id', $subject->id)
+                ->where('topic_name', $topic)
+                ->where('type', 'topic')
+                ->exists()
+            : false;
+
+        return view('subjects.topic', compact('subject', 'topic', 'materials', 'isTopicFavorited'));
     }
 
     public function showMaterial(Material $material)
     {
         $material->load('subject');
-        return view('materials.show', compact('material'));
+
+        $isFavorited = auth()->check()
+            ? Favorite::where('user_id', auth()->id())
+                ->where('material_id', $material->id)
+                ->where('type', 'material')
+                ->exists()
+            : false;
+
+        return view('materials.show', compact('material', 'isFavorited'));
+    }
+
+    public function download($material)
+    {
+        $material = Material::findOrFail($material);
+        if (!$material->file_path) {
+            abort(404);
+        }
+        return Storage::disk('public')->download($material->file_path, $material->title . '.pdf');
     }
 }
