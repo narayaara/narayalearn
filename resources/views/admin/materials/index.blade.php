@@ -1,9 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Material Management - Admin')
 
-@section('content')
-<div class="container py-4">
+@section('admin-content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold mb-0" style="color: #2D1B2E;">
             <i class="fas fa-file-alt" style="color: #FF6B9D;"></i> Material Management
@@ -30,8 +29,8 @@
                     <a href="{{ route('admin.materials.edit', $material) }}" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <button type="button" 
-                            class="btn btn-sm btn-outline-danger" 
+                    <button type="button"
+                            class="btn btn-sm btn-outline-danger"
                             onclick="actionDestroy('{{ route('admin.materials.destroy', $material) }}', '{{ $material->title }}')">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -41,7 +40,6 @@
     @empty
         <p class="text-muted text-center">No materials found.</p>
     @endforelse
-</div>
 
 {{-- Form & Script di luar loop --}}
 <form action="" id="form-destroy" method="POST" class="d-none">

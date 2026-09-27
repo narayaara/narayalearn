@@ -1,9 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'User Management - Admin')
 
-@section('content')
-<div class="container py-4">
+@section('admin-content')
     <h2 class="fw-bold mb-4" style="color: #2D1B2E;">
         <i class="fas fa-users" style="color: #FF6B9D;"></i> User Management
     </h2>
@@ -13,7 +12,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center gap-3">
                     @if($user->avatar)
-                        <img src="{{ asset('storage/avatars/'.$user->avatar) }}" 
+                        <img src="{{ asset('storage/avatars/'.$user->avatar) }}"
                              class="rounded-circle" width="40" height="40">
                     @else
                         <div class="rounded-circle d-flex align-items-center justify-content-center"
@@ -33,8 +32,8 @@
                     </div>
                 </div>
                 @if($user->id !== Auth::id())
-                    <button type="button" 
-                            class="btn btn-sm btn-outline-danger" 
+                    <button type="button"
+                            class="btn btn-sm btn-outline-danger"
                             onclick="actionDestroy('{{ route('admin.users.destroy', $user) }}', '{{ $user->name }}')">
                         <i class="fas fa-trash"></i> Delete
                     </button>
@@ -46,7 +45,6 @@
     @empty
         <p class="text-muted text-center">No users found.</p>
     @endforelse
-</div>
 
 <form action="" id="form-destroy" method="POST" class="d-none">
     @csrf

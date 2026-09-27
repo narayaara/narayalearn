@@ -1,7 +1,7 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
-@section('content')
-<div class="container py-4" style="max-width: 480px;">
+@section('admin-content')
+<div style="max-width: 480px;">
     <h2 class="fw-bold mb-4" style="color: #2D1B2E;">Add Subject</h2>
     <form action="{{ route('admin.subjects.store') }}" method="POST">
         @csrf

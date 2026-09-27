@@ -31,39 +31,10 @@
 
                 @auth
                     @if(Auth::user()->role === 'admin')
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" 
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-crown me-2"></i> Admin Panel
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('admin.*') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-crown me-2"></i> Admin Dashboard
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('admin.dashboard') }}">
-                                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('admin.subjects.index') }}">
-                                        <i class="fas fa-list me-2"></i> Kelola Subject
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('admin.materials.index') }}">
-                                        <i class="fas fa-file-alt me-2"></i> Kelola Materi
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('admin.users.index') }}">
-                                        <i class="fas fa-users me-2"></i> Kelola User
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('admin.comments.index') }}">
-                                        <i class="fas fa-comments me-2"></i> Moderasi Komentar
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                     @endif
                 @endauth

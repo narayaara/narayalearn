@@ -1,9 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Subject Management - Admin')
 
-@section('content')
-<div class="container py-4">
+@section('admin-content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="fw-bold mb-0" style="color: #2D1B2E;">
             <i class="fas fa-book" style="color: #FF6B9D;"></i> Subject Management
@@ -24,8 +23,8 @@
                     <a href="{{ route('admin.subjects.edit', $subject) }}" class="btn btn-sm btn-outline-secondary">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <button type="button" 
-                            class="btn btn-sm btn-outline-danger" 
+                    <button type="button"
+                            class="btn btn-sm btn-outline-danger"
                             onclick="actionDestroy('{{ route('admin.subjects.destroy', $subject) }}', '{{ $subject->name }}')">
                         <i class="fas fa-trash"></i>
                     </button>
@@ -35,7 +34,6 @@
     @empty
         <p class="text-muted text-center">No subjects found.</p>
     @endforelse
-</div>
 
 <form action="" id="form-destroy" method="POST" class="d-none">
     @csrf
