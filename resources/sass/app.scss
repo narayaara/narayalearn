@@ -1197,3 +1197,91 @@ body.lightbox-open {
     border: none;
     display: block;
 }
+
+// ==============================================
+// PROFILE PAGE
+// ==============================================
+
+.profile-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.profile-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--pink-light);
+    color: var(--pink-primary);
+    font-size: 26px;
+}
+
+.profile-role-badge {
+    background: var(--pink-light);
+    color: var(--pink-primary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    vertical-align: middle;
+}
+
+.profile-section-title {
+    font-weight: 700;
+    margin-bottom: 12px;
+
+    i {
+        color: var(--pink-primary);
+        margin-right: 8px;
+    }
+}
+
+.fav-item {
+    transition: all 0.2s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 157, 0.15) !important;
+    }
+}
+
+.fav-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--pink-light);
+    color: var(--pink-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.fav-type-badge {
+    background: var(--pink-light);
+    color: var(--pink-primary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+.fav-item-remove {
+    position: relative;
+    z-index: 2;
+    background: none;
+    border: none;
+    padding: 4px;
+    color: var(--pink-primary);
+    font-size: 16px;
+    transition: transform 0.2s ease;
+
+    &:hover {
+        transform: scale(1.2);
+    }
+}

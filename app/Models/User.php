@@ -24,11 +24,6 @@ class User extends Authenticatable
      */
     protected $fillable = ['name', 'email', 'password', 'role', 'avatar'];
 
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
     public function favorites()
     {
         return $this->belongsToMany(Material::class, 'favorites');
