@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Subject;
 use App\Models\Material;
 use App\Models\User;
-use App\Models\Comment;
 
 class HomeController extends Controller
 {
@@ -16,7 +15,6 @@ class HomeController extends Controller
             'totalSubjects' => Subject::count(),
             'totalMaterials' => Material::count(),
             'totalUsers' => User::count(),
-            'totalComments' => Comment::count(),
 
             // Subject populer (top 4 berdasarkan jumlah materi)
             'popularSubjects' => Subject::withCount('materials')

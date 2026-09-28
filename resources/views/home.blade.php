@@ -54,12 +54,6 @@
                 <p class="text-muted mb-0">Pengguna</p>
             </div>
         </div>
-        <div class="col-md-3 col-6">
-            <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalComments }}</h3>
-                <p class="text-muted mb-0">Komentar</p>
-            </div>
-        </div>
     </div>
 
     <!-- ===== SUBJECT POPULER (DINAMIS) ===== -->

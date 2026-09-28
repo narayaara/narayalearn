@@ -2,60 +2,73 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Favorite;
-use App\Models\Material;
-use App\Models\Subject;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Favorite;
 
-class FavoriteController extends Controller
+class ProfileController extends Controller
 {
-    public function toggle(Material $material)
+    public function index(Request $request): View
     {
-        $existing = Favorite::where('user_id', auth()->id())
+        $user = $request->user();
+
+        $favoriteMaterials = Favorite::with('material.subject')
+            ->where('user_id', $user->id)
             ->where('type', 'material')
-            ->where('material_id', $material->id)
-            ->first();
+            ->latest()
+            ->get();
 
-        if ($existing) {
-            $existing->delete();
-            $message = 'Removed from favorites.';
-        } else {
-            Favorite::create([
-                'user_id' => auth()->id(),
-                'type' => 'material',
-                'material_id' => $material->id,
-            ]);
-            $message = 'Added to favorites.';
-        }
+        $favoriteTopics = Favorite::with('subject')
+            ->where('user_id', $user->id)
+            ->where('type', 'topic')
+            ->latest()
+            ->get();
 
-        return back()->with('success', $message);
+        return view('profile.index', compact('user', 'favoriteMaterials', 'favoriteTopics'));
     }
 
-    public function toggleTopic(Request $request, Subject $subject)
+    public function edit(Request $request): View
     {
-        $request->validate([
-            'topic_name' => 'required|string|max:255',
+        return view('profile.edit', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function update(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $existing = Favorite::where('user_id', auth()->id())
-            ->where('type', 'topic')
-            ->where('subject_id', $subject->id)
-            ->where('topic_name', $request->topic_name)
-            ->first();
+        $data = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ];
 
-        if ($existing) {
-            $existing->delete();
-            $message = 'Removed from favorites.';
-        } else {
-            Favorite::create([
-                'user_id' => auth()->id(),
-                'type' => 'topic',
-                'subject_id' => $subject->id,
-                'topic_name' => $request->topic_name,
-            ]);
-            $message = 'Added to favorites.';
+        if ($request->filled('password')) {
+            $data['password'] = Hash::make($validated['password']);
         }
 
-        return back()->with('success', $message);
+        if ($request->hasFile('avatar')) {
+            if ($user->avatar) {
+                Storage::disk('public')->delete('avatars/' . $user->avatar);
+            }
+            $filename = time() . '_' . $request->file('avatar')->getClientOriginalName();
+            $request->file('avatar')->storeAs('avatars', $filename, 'public');
+            $data['avatar'] = $filename;
+        }
+
+        $user->update($data);
+
+        return redirect()
+            ->route('profile.index')
+            ->with('success', 'Profil berhasil diperbarui!');
     }
 }
