@@ -17,29 +17,29 @@
     <div class="card border-0 rounded-4 p-4">
         <h4 class="fw-bold mb-4">Edit Profile</h4>
 
-        <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('profile.update') }}" method="POST">
             @csrf
             @method('PUT')
 
-            {{-- Avatar (admin tidak perlu avatar) --}}
+            {{-- Avatar picker (admin tidak perlu avatar) --}}
             @if($user->role !== 'admin')
-                <div class="d-flex align-items-center gap-3 mb-4">
-                    @if($user->avatar)
-                        <img src="{{ asset('storage/avatars/'.$user->avatar) }}" class="profile-avatar" alt="{{ $user->name }}">
-                    @else
-                        <div class="profile-avatar profile-avatar-placeholder">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    @endif
+                <div class="mb-4">
+                    <label class="form-label fw-semibold small d-block mb-2">Pilih Avatar</label>
 
-                    <div class="flex-grow-1">
-                        <label class="form-label fw-semibold small mb-1">Foto Profil</label>
-                        <input type="file" name="avatar"
-                               class="form-control form-control-sm @error('avatar') is-invalid @enderror"
-                               accept=".jpg,.jpeg,.png">
-                        @error('avatar') <div class="invalid-feedback">{{ $message }}</div> @enderror
-                        <small class="text-muted">JPG/PNG, maks. 2MB</small>
-                    </div>
+                    @if($avatars->count() > 0)
+                        <div class="avatar-picker-grid">
+                            @foreach($avatars as $avatar)
+                                <label class="avatar-picker-item">
+                                    <input type="radio" name="avatar_id" value="{{ $avatar->id }}"
+                                           {{ $user->avatar === $avatar->filename ? 'checked' : '' }}>
+                                    <img src="{{ asset('storage/avatars/'.$avatar->filename) }}" alt="Avatar">
+                                </label>
+                            @endforeach
+                        </div>
+                        @error('avatar_id') <div class="text-danger small mt-2">{{ $message }}</div> @enderror
+                    @else
+                        <p class="text-muted small mb-0">Belum ada avatar preset dari admin.</p>
+                    @endif
                 </div>
             @endif
 

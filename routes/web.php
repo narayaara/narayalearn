@@ -33,6 +33,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('/subjects', \App\Http\Controllers\Admin\SubjectController::class);
     Route::resource('/materials', \App\Http\Controllers\Admin\MaterialController::class)->except('show');
 
+    Route::get('/avatars', [\App\Http\Controllers\Admin\AvatarController::class, 'index'])->name('avatars.index');
+    Route::post('/avatars', [\App\Http\Controllers\Admin\AvatarController::class, 'store'])->name('avatars.store');
+    Route::delete('/avatars/{avatar}', [\App\Http\Controllers\Admin\AvatarController::class, 'destroy'])->name('avatars.destroy');
+
     Route::get('/users', [\App\Http\Controllers\Admin\UserController::class, 'index'])->name('users.index');
     Route::delete('/users/{user}', [\App\Http\Controllers\Admin\UserController::class, 'destroy'])->name('users.destroy');
 });

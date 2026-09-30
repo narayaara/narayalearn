@@ -1285,3 +1285,96 @@ body.lightbox-open {
         transform: scale(1.2);
     }
 }
+
+// ==============================================
+// AVATAR PICKER (halaman edit profil user)
+// ==============================================
+
+.avatar-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+    gap: 12px;
+    max-width: 420px;
+}
+
+.avatar-picker-item {
+    position: relative;
+    cursor: pointer;
+    display: block;
+
+    input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    img {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid transparent;
+        transition: all 0.2s ease;
+        display: block;
+    }
+
+    &:hover img {
+        border-color: var(--pink-light);
+    }
+
+    input[type="radio"]:checked + img {
+        border-color: var(--pink-primary);
+        box-shadow: 0 0 0 2px var(--pink-light);
+    }
+}
+
+// ==============================================
+// AVATAR MANAGEMENT (halaman admin)
+// ==============================================
+
+.avatar-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 16px;
+}
+
+.avatar-admin-item {
+    position: relative;
+    text-align: center;
+
+    img {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--border-light);
+    }
+
+    form {
+        margin: 0;
+    }
+}
+
+.avatar-admin-delete {
+    position: absolute;
+    top: -4px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    color: #e0558a;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: #e0558a;
+        color: #fff;
+    }
+}

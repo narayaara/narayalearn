@@ -23,6 +23,9 @@
             <a href="{{ route('admin.materials.index') }}" class="admin-nav-link {{ request()->routeIs('admin.materials.*') ? 'active' : '' }}">
                 <i class="fas fa-file-alt"></i> <span>Materials</span>
             </a>
+            <a href="{{ route('admin.avatars.index') }}" class="admin-nav-link {{ request()->routeIs('admin.avatars.*') ? 'active' : '' }}">
+                <i class="fas fa-user-circle"></i> <span>Avatars</span>
+            </a>
             <a href="{{ route('admin.users.index') }}" class="admin-nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
                 <i class="fas fa-users"></i> <span>Users</span>
             </a>

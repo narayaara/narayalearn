@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Avatar;
 use App\Models\Favorite;
 
 class ProfileController extends Controller
@@ -14,15 +14,18 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
+        // whereHas: lewati favorit yang materi/subject-nya sudah dihapus admin
         $favoriteMaterials = Favorite::with('material.subject')
             ->where('user_id', $user->id)
             ->where('type', 'material')
+            ->whereHas('material')
             ->latest()
             ->get();
 
         $favoriteTopics = Favorite::with('subject')
             ->where('user_id', $user->id)
             ->where('type', 'topic')
+            ->whereHas('subject')
             ->latest()
             ->get();
 
@@ -31,9 +34,10 @@ class ProfileController extends Controller
 
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = $request->user();
+        $avatars = Avatar::latest()->get();
+
+        return view('profile.edit', compact('user', 'avatars'));
     }
 
     public function update(Request $request)
@@ -44,7 +48,7 @@ class ProfileController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|min:8|confirmed',
-            'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'avatar_id' => 'nullable|exists:avatars,id',
         ]);
 
         $data = [
@@ -56,19 +60,15 @@ class ProfileController extends Controller
             $data['password'] = Hash::make($validated['password']);
         }
 
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                Storage::disk('public')->delete('avatars/' . $user->avatar);
-            }
-            $filename = time() . '_' . $request->file('avatar')->getClientOriginalName();
-            $request->file('avatar')->storeAs('avatars', $filename, 'public');
-            $data['avatar'] = $filename;
+        if ($request->filled('avatar_id')) {
+            $avatar = Avatar::find($request->avatar_id);
+            $data['avatar'] = $avatar->filename;
         }
 
         $user->update($data);
 
         return redirect()
             ->route('profile.index')
-            ->with('success', 'Profil berhasil diperbarui!');
+            ->with('success', 'Profile successfully updated!');
     }
 }
