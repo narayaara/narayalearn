@@ -64,7 +64,7 @@
     <!-- Aktivitas Terbaru -->
     <div class="row g-4">
         <!-- User Terbaru -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-transparent border-0 pt-3">
                     <h5 class="fw-bold mb-0" style="color: #2D1B2E;">
@@ -81,11 +81,11 @@
                                     <i class="fas fa-user" style="color: #FF6B9D; font-size: 18px;"></i>
                                 @endif
                             </div>
-                            <div class="flex-grow-1">
-                                <div class="fw-bold" style="color: #2D1B2E; font-size: 0.9rem;">{{ $user->name }}</div>
-                                <small class="text-muted">{{ $user->email }}</small>
+                            <div class="flex-grow-1 min-width-0">
+                                <div class="fw-bold text-truncate" style="color: #2D1B2E; font-size: 0.9rem;">{{ $user->name }}</div>
+                                <small class="text-muted text-truncate d-block">{{ $user->email }}</small>
                             </div>
-                            <span class="badge bg-light text-muted">{{ $user->created_at->diffForHumans() }}</span>
+                            <span class="badge bg-light text-muted flex-shrink-0">{{ $user->created_at->diffForHumans() }}</span>
                         </div>
                     @empty
                         <p class="text-muted text-center">Belum ada user</p>
@@ -95,7 +95,7 @@
         </div>
 
         <!-- Materi Terbaru -->
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card border-0 shadow-sm rounded-4">
                 <div class="card-header bg-transparent border-0 pt-3">
                     <h5 class="fw-bold mb-0" style="color: #2D1B2E;">
@@ -108,16 +108,53 @@
                             <div class="rounded-circle bg-white p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 2px solid #FFE0EB;">
                                 <i class="fas fa-file" style="color: #FF6B9D; font-size: 18px;"></i>
                             </div>
-                            <div class="flex-grow-1">
-                                <div class="fw-bold" style="color: #2D1B2E; font-size: 0.9rem;">{{ $material->title }}</div>
-                                <small class="text-muted">{{ $material->subject->name ?? 'No Subject' }}</small>
+                            <div class="flex-grow-1 min-width-0">
+                                <div class="fw-bold text-truncate" style="color: #2D1B2E; font-size: 0.9rem;">{{ $material->title }}</div>
+                                <small class="text-muted text-truncate d-block">{{ $material->subject->name ?? 'No Subject' }}</small>
                             </div>
-                            <span class="badge" style="background: #FFE0EB; color: #FF6B9D;">
+                            <span class="badge flex-shrink-0" style="background: #FFE0EB; color: #FF6B9D;">
                                 {{ ucfirst($material->type) }}
                             </span>
                         </div>
                     @empty
                         <p class="text-muted text-center">Belum ada materi</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        <!-- Favorite Terbaru -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-transparent border-0 pt-3">
+                    <h5 class="fw-bold mb-0" style="color: #2D1B2E;">
+                        <i class="fas fa-heart" style="color: #FF6B9D;"></i> Favorite Terbaru
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @forelse($latestFavorites as $fav)
+                        <div class="d-flex align-items-center gap-3 mb-2 p-2 rounded-3" style="background: #FFF5F8;">
+                            <div class="rounded-circle bg-white p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 2px solid #FFE0EB;">
+                                <i class="fas fa-heart" style="color: #FF6B9D; font-size: 16px;"></i>
+                            </div>
+                            <div class="flex-grow-1 min-width-0">
+                                <div class="fw-bold text-truncate" style="color: #2D1B2E; font-size: 0.9rem;">
+                                    {{ $fav->user->name ?? 'Unknown' }}
+                                </div>
+                                <small class="text-muted text-truncate d-block">
+                                    @if($fav->type === 'topic')
+                                        {{ $fav->topic_name }} • {{ $fav->subject->name ?? '-' }}
+                                    @else
+                                        {{ $fav->material->title ?? 'Unknown' }} • {{ $fav->material->subject->name ?? '-' }}
+                                    @endif
+                                </small>
+                            </div>
+                            <span class="badge flex-shrink-0" style="background: #FFE0EB; color: #FF6B9D;">
+                                {{ $fav->type === 'topic' ? 'Topik' : ucfirst($fav->material->type ?? '-') }}
+                            </span>
+                        </div>
+                    @empty
+                        <p class="text-muted text-center">Belum ada favorite</p>
                     @endforelse
                 </div>
             </div>
