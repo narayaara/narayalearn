@@ -1,16 +1,18 @@
 @extends('layouts.admin')
 
 @section('admin-content')
-<div style="max-width: 600px;">
+<div class="mx-auto" style="max-width: 600px;">
     <h2 class="fw-bold mb-4" style="color: #2D1B2E;">Add Material</h2>
-    <form action="{{ route('admin.materials.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.materials.store') }}" method="POST" enctype="multipart/form-data" id="materialForm">
         @csrf
 
         <div class="mb-3">
             <label class="form-label">Subject</label>
-            <select name="subject_id" class="form-select rounded-3">
+            <select name="subject_id" id="subjectSelect" class="form-select rounded-3">
                 @foreach ($subjects as $subject)
-                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                    <option value="{{ $subject->id }}" {{ old('subject_id') == $subject->id ? 'selected' : '' }}>
+                        {{ $subject->name }}
+                    </option>
                 @endforeach
             </select>
         </div>
@@ -25,9 +27,13 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Title</label>
-            <input type="text" name="title" value="{{ old('title') }}" class="form-control rounded-3">
+            <label class="form-label">Topik</label>
+            <select id="topicSelect" class="form-select rounded-3 mb-2"></select>
+            <input type="text" name="title" id="titleInput"
+                   class="form-control rounded-3 @error('title') is-invalid @enderror"
+                   placeholder="Nama topik baru" value="{{ old('title') }}">
             @error('title') <div class="text-danger small">{{ $message }}</div> @enderror
+            <small class="text-muted">Pilih topik yang sudah ada, atau pilih "+ Buat topik baru" kalau ini topik baru.</small>
         </div>
 
         <!-- Sumber Konten -->
@@ -60,7 +66,6 @@
             <small class="text-muted">PDF, JPG, PNG. Max: 5MB</small>
         </div>
 
-        <!-- Field Link URL -->
         <div class="mb-3 d-none" id="link-field">
             <label class="form-label">Link URL</label>
             <input type="text" name="youtube_url" value="{{ old('youtube_url') }}"
@@ -76,6 +81,65 @@
 </div>
 
 <script>
+    const topicsBySubject = @json($topicsBySubject);
+    const oldTitle = @json(old('title'));
+
+    const subjectSelect = document.getElementById('subjectSelect');
+    const topicSelect = document.getElementById('topicSelect');
+    const titleInput = document.getElementById('titleInput');
+
+    const NEW_TOPIC_VALUE = '__new__';
+
+    function populateTopics(preselectTitle) {
+        const subjectId = subjectSelect.value;
+        const topics = topicsBySubject[subjectId] || [];
+
+        topicSelect.innerHTML = '';
+
+        const placeholder = new Option('— Pilih topik yang sudah ada —', '');
+        topicSelect.add(placeholder);
+
+        topics.forEach(function (topic) {
+            topicSelect.add(new Option(topic, topic));
+        });
+
+        topicSelect.add(new Option('+ Buat topik baru', NEW_TOPIC_VALUE));
+
+        if (preselectTitle && topics.includes(preselectTitle)) {
+            topicSelect.value = preselectTitle;
+            titleInput.value = preselectTitle;
+            titleInput.classList.add('d-none');
+        } else if (preselectTitle) {
+            topicSelect.value = NEW_TOPIC_VALUE;
+            titleInput.value = preselectTitle;
+            titleInput.classList.remove('d-none');
+        } else {
+            topicSelect.value = '';
+            titleInput.value = '';
+            titleInput.classList.add('d-none');
+        }
+    }
+
+    topicSelect.addEventListener('change', function () {
+        if (topicSelect.value === NEW_TOPIC_VALUE) {
+            titleInput.value = '';
+            titleInput.classList.remove('d-none');
+            titleInput.focus();
+        } else if (topicSelect.value === '') {
+            titleInput.value = '';
+            titleInput.classList.add('d-none');
+        } else {
+            titleInput.value = topicSelect.value;
+            titleInput.classList.add('d-none');
+        }
+    });
+
+    subjectSelect.addEventListener('change', function () {
+        populateTopics(null);
+    });
+
+    populateTopics(oldTitle || null);
+
     const sourceFile = document.getElementById('source_file');
     const sourceLink = document.getElementById('source_link');
     const fileField = document.getElementById('file-field');

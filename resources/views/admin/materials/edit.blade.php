@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('admin-content')
-<div style="max-width: 600px;">
+<div class="mx-auto" style="max-width: 600px;">
     <h2 class="fw-bold mb-4" style="color: #2D1B2E;">Edit Material</h2>
     <form action="{{ route('admin.materials.update', $material) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -9,7 +9,7 @@
 
         <div class="mb-3">
             <label class="form-label">Subject</label>
-            <select name="subject_id" class="form-select rounded-3">
+            <select name="subject_id" id="subjectSelect" class="form-select rounded-3">
                 @foreach ($subjects as $subject)
                     <option value="{{ $subject->id }}" {{ $material->subject_id == $subject->id ? 'selected' : '' }}>
                         {{ $subject->name }}
@@ -28,9 +28,13 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Title</label>
-            <input type="text" name="title" value="{{ old('title', $material->title) }}" class="form-control rounded-3">
+            <label class="form-label">Topik</label>
+            <select id="topicSelect" class="form-select rounded-3 mb-2"></select>
+            <input type="text" name="title" id="titleInput"
+                   class="form-control rounded-3 @error('title') is-invalid @enderror"
+                   placeholder="Nama topik baru" value="{{ old('title', $material->title) }}">
             @error('title') <div class="text-danger small">{{ $message }}</div> @enderror
+            <small class="text-muted">Pilih topik yang sudah ada, atau pilih "+ Buat topik baru" kalau ini topik baru.</small>
         </div>
 
         <!-- Sumber Konten -->
@@ -79,6 +83,65 @@
 </div>
 
 <script>
+    const topicsBySubject = @json($topicsBySubject);
+    const currentTitle = @json(old('title', $material->title));
+
+    const subjectSelect = document.getElementById('subjectSelect');
+    const topicSelect = document.getElementById('topicSelect');
+    const titleInput = document.getElementById('titleInput');
+
+    const NEW_TOPIC_VALUE = '__new__';
+
+    function populateTopics(preselectTitle) {
+        const subjectId = subjectSelect.value;
+        const topics = topicsBySubject[subjectId] || [];
+
+        topicSelect.innerHTML = '';
+
+        const placeholder = new Option('— Pilih topik yang sudah ada —', '');
+        topicSelect.add(placeholder);
+
+        topics.forEach(function (topic) {
+            topicSelect.add(new Option(topic, topic));
+        });
+
+        topicSelect.add(new Option('+ Buat topik baru', NEW_TOPIC_VALUE));
+
+        if (preselectTitle && topics.includes(preselectTitle)) {
+            topicSelect.value = preselectTitle;
+            titleInput.value = preselectTitle;
+            titleInput.classList.add('d-none');
+        } else if (preselectTitle) {
+            topicSelect.value = NEW_TOPIC_VALUE;
+            titleInput.value = preselectTitle;
+            titleInput.classList.remove('d-none');
+        } else {
+            topicSelect.value = '';
+            titleInput.value = '';
+            titleInput.classList.add('d-none');
+        }
+    }
+
+    topicSelect.addEventListener('change', function () {
+        if (topicSelect.value === NEW_TOPIC_VALUE) {
+            titleInput.value = '';
+            titleInput.classList.remove('d-none');
+            titleInput.focus();
+        } else if (topicSelect.value === '') {
+            titleInput.value = '';
+            titleInput.classList.add('d-none');
+        } else {
+            titleInput.value = topicSelect.value;
+            titleInput.classList.add('d-none');
+        }
+    });
+
+    subjectSelect.addEventListener('change', function () {
+        populateTopics(null);
+    });
+
+    populateTopics(currentTitle || null);
+
     const sourceFile = document.getElementById('source_file');
     const sourceLink = document.getElementById('source_link');
     const fileField = document.getElementById('file-field');

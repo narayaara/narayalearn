@@ -19,7 +19,9 @@ class MaterialController extends Controller
     public function create()
     {
         $subjects = Subject::all();
-        return view('admin.materials.create', compact('subjects'));
+        $topicsBySubject = $this->topicsBySubject();
+
+        return view('admin.materials.create', compact('subjects', 'topicsBySubject'));
     }
 
     public function store(Request $request)
@@ -51,7 +53,9 @@ class MaterialController extends Controller
     public function edit(Material $material)
     {
         $subjects = Subject::all();
-        return view('admin.materials.edit', compact('material', 'subjects'));
+        $topicsBySubject = $this->topicsBySubject();
+
+        return view('admin.materials.edit', compact('material', 'subjects', 'topicsBySubject'));
     }
 
     public function update(Request $request, Material $material)
@@ -68,7 +72,6 @@ class MaterialController extends Controller
         $data = $request->only('subject_id', 'title', 'type');
 
         if ($request->source_type === 'file' && $request->hasFile('file')) {
-            // Hapus file lama
             if ($material->file_path) {
                 Storage::disk('public')->delete($material->file_path);
             }
@@ -97,5 +100,19 @@ class MaterialController extends Controller
         $material->delete();
 
         return redirect()->route('admin.materials.index')->with('success', 'Material berhasil dihapus.');
+    }
+
+    /**
+     * Daftar topik (title unik) yang udah ada, dikelompokkan per subject_id.
+     * Dipakai buat ngisi dropdown topik di form create/edit secara dinamis via JS.
+     */
+    private function topicsBySubject(): array
+    {
+        return Material::query()
+            ->select('subject_id', 'title')
+            ->get()
+            ->groupBy('subject_id')
+            ->map(fn ($items) => $items->pluck('title')->unique()->values())
+            ->toArray();
     }
 }

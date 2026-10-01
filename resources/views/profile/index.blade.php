@@ -39,37 +39,6 @@
         </div>
     </div>
 
-    {{-- TOPIK FAVORIT --}}
-    <h5 class="profile-section-title">
-        <i class="fas fa-bookmark"></i> Topik Favorit
-    </h5>
-
-    @if($favoriteTopics->count() > 0)
-        <div class="row g-2 mb-4">
-            @foreach($favoriteTopics as $fav)
-                <div class="col-md-6">
-                    <div class="fav-item card border-0 rounded-3 position-relative">
-                        <div class="d-flex align-items-center gap-3 p-3">
-                            <div class="fav-item-icon">
-                                <i class="fas fa-graduation-cap"></i>
-                            </div>
-                            <div class="flex-grow-1 min-width-0">
-                                <a href="{{ route('subjects.topic', [$fav->subject, $fav->topic_name]) }}"
-                                   class="stretched-link text-decoration-none fw-semibold d-block text-truncate">
-                                    {{ $fav->topic_name }}
-                                </a>
-                                <small class="text-muted">{{ $fav->subject->name }}</small>
-                            </div>
-                            <i class="fas fa-chevron-right text-muted" style="font-size: 12px;"></i>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @else
-        <p class="text-muted small mb-4">Belum ada topik yang difavoritkan.</p>
-    @endif
-
     {{-- MATERI FAVORIT --}}
     <h5 class="profile-section-title">
         <i class="fas fa-heart"></i> Materi Favorit
