@@ -6,7 +6,7 @@
 <div class="container py-4" style="max-width: 900px;">
 
     <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-3">
+    <nav aria-label="breadcrumb" class="mb-2">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
                 <a href="{{ route('home') }}" style="color: var(--pink-primary);">Home</a>
@@ -28,6 +28,11 @@
         </ol>
     </nav>
 
+    <!-- Back link -->
+    <a href="{{ route('subjects.topic', [$material->subject, $material->title]) }}" class="back-link mb-3">
+        <i class="fas fa-arrow-left"></i> Back to {{ $material->title }}
+    </a>
+
     @php
         $ext = $material->file_path ? strtolower(pathinfo($material->file_path, PATHINFO_EXTENSION)) : null;
         $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
@@ -47,40 +52,24 @@
             </h3>
         </div>
 
-        <div class="material-toolbar-actions">
-            {{-- ===== TOMBOL FAVORITE ===== --}}
-            @auth
-                <form action="{{ route('favorites.toggle', $material) }}" method="POST" class="d-inline">
-                    @csrf
-                    <button type="submit" 
-                            class="btn btn-sm rounded-3 {{ ($isFavorited ?? false) ? 'btn-pink' : 'btn-outline-secondary' }}">
-                        <i class="{{ ($isFavorited ?? false) ? 'fas' : 'far' }} fa-heart me-1"></i>
-                        {{ ($isFavorited ?? false) ? 'Favorited' : 'Favorite' }}
-                    </button>
-                </form>
-            @else
-                <a href="{{ route('login') }}" class="btn btn-sm btn-outline-secondary rounded-3">
-                    <i class="far fa-heart me-1"></i> Favorite
-                </a>
-            @endauth
-
-            {{-- Tombol Video YouTube --}}
-            @if($isVideo && $material->youtube_link)
+        @if($isVideo && $material->youtube_link)
+            <div class="material-toolbar-actions">
                 <a href="{{ $material->youtube_link }}" target="_blank" rel="noopener"
                    class="btn btn-outline-secondary btn-sm rounded-3">
-                    <i class="fab fa-youtube me-1"></i> Buka di YouTube
+                    <i class="fab fa-youtube me-1"></i> Open on YouTube
                 </a>
-            @elseif($fileUrl)
-                {{-- Tombol File (PDF/Gambar) --}}
+            </div>
+        @elseif($fileUrl)
+            <div class="material-toolbar-actions">
                 <a href="{{ $fileUrl }}" target="_blank" rel="noopener"
                    class="btn btn-outline-secondary btn-sm rounded-3">
-                    <i class="fas fa-up-right-from-square me-1"></i> Buka di Tab Baru
+                    <i class="fas fa-up-right-from-square me-1"></i> Open on a new tab
                 </a>
                 <a href="{{ route('materials.download', $material) }}" class="btn btn-sm rounded-3 material-download-btn">
                     <i class="fas fa-download me-1"></i> Download
                 </a>
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 
     <!-- Konten -->
@@ -95,14 +84,14 @@
         @else
             <div class="material-empty-state">
                 <i class="fas fa-video-slash"></i>
-                <p class="mb-0">Video belum tersedia.</p>
+                <p class="mb-0">Video not available.</p>
             </div>
         @endif
     @elseif($fileUrl && $isImage)
         <div class="material-image-frame" onclick="openMaterialLightbox()">
             <img src="{{ $fileUrl }}" alt="{{ $material->title }}">
             <div class="material-image-hint">
-                <i class="fas fa-expand"></i> Ketuk untuk perbesar
+                <i class="fas fa-expand"></i> Tap to zoom
             </div>
         </div>
 
@@ -134,13 +123,6 @@
             <p class="mb-0">Dokumen belum tersedia.</p>
         </div>
     @endif
-
-    <!-- Tombol Kembali -->
-    <div class="text-center mt-4">
-        <a href="{{ route('subjects.topic', [$material->subject, $material->title]) }}" class="btn btn-outline-secondary rounded-3">
-            <i class="fas fa-arrow-left me-1"></i> Kembali ke {{ $material->title }}
-        </a>
-    </div>
 
 </div>
 @endsection

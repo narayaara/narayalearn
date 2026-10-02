@@ -5,6 +5,11 @@
 @section('content')
 <div class="container py-4" style="max-width: 1100px;">
 
+    <!-- Back link -->
+    <a href="{{ route('subjects.index') }}" class="back-link mb-3">
+        <i class="fas fa-arrow-left"></i> Back to Subjects
+    </a>
+
     <!-- Header Subject -->
     <div class="mb-4 p-4 rounded-4"
          style="background: var(--pink-soft); box-shadow: var(--shadow-card);">
@@ -13,7 +18,7 @@
             {{ $subject->name }}
         </h2>
         <p class="mb-0 small" style="color: var(--text-gray);">
-            Pilih topik untuk mulai belajar
+            Choose topic to learn
         </p>
     </div>
 
@@ -22,7 +27,7 @@
         <div class="row g-3">
             @foreach ($topics as $title => $material)
                 <div class="col-md-6 col-lg-4">
-                    <a href="{{ route('subjects.topic', [$subject, $title]) }}" class="text-decoration-none d-block h-100">
+                    <div class="card-material-wrapper position-relative h-100">
                         <div class="card-material card border-0 rounded-4 p-3 h-100"
                              style="background: var(--bg-card); box-shadow: var(--shadow-card);">
                             <div class="d-flex align-items-center gap-3">
@@ -34,16 +39,28 @@
 
                                 <!-- Title -->
                                 <div class="flex-grow-1 min-width-0">
-                                    <span class="fw-bold d-block text-truncate" style="color: var(--text-dark);">
-                                        {{ $title }}
-                                    </span>
+                                    <a href="{{ route('subjects.topic', [$subject, $title]) }}" class="stretched-link text-decoration-none">
+                                        <span class="fw-bold d-block text-truncate" style="color: var(--text-dark);">
+                                            {{ $title }}
+                                        </span>
+                                    </a>
                                 </div>
 
                                 <!-- Chevron -->
                                 <i class="fas fa-chevron-right" style="color: var(--text-muted); font-size: 12px;"></i>
                             </div>
                         </div>
-                    </a>
+
+                        @auth
+                            <form action="{{ route('favorites.toggle', $material) }}" method="POST" class="favorite-btn-form">
+                                @csrf
+                                <button type="submit" class="favorite-btn {{ in_array($material->id, $favoriteIds) ? 'is-favorited' : '' }}"
+                                        aria-label="Favorite">
+                                    <i class="fa{{ in_array($material->id, $favoriteIds) ? 's' : 'r' }} fa-heart"></i>
+                                </button>
+                            </form>
+                        @endauth
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -52,19 +69,12 @@
         <div class="card border-0 rounded-4 p-5 text-center"
              style="background: var(--bg-card); box-shadow: var(--shadow-card);">
             <i class="fas fa-book-open" style="font-size: 60px; color: var(--text-muted);"></i>
-            <h5 class="mt-3 mb-2" style="color: var(--text-dark);">Belum Ada Topik</h5>
+            <h5 class="mt-3 mb-2" style="color: var(--text-dark);">No Topics Available</h5>
             <p class="small mb-0" style="color: var(--text-gray);">
-                Topik untuk mata pelajaran ini belum tersedia.
+                Topics for this subject are not available yet.
             </p>
         </div>
     @endif
-
-    <!-- Tombol Kembali -->
-    <div class="text-center mt-4">
-        <a href="{{ route('subjects.index') }}" class="btn btn-outline-secondary rounded-3">
-            <i class="fas fa-arrow-left me-1"></i> Kembali ke Daftar Subject
-        </a>
-    </div>
 
 </div>
 @endsection

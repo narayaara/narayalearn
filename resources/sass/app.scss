@@ -1383,3 +1383,22 @@ body.lightbox-open {
 @media (max-width: 480px) {
     .pdf-embed { height: 300px; }
 }
+
+// ==================================================================
+// BACK LINK (pojok kiri atas, pengganti tombol "Kembali" di bawah)
+// ==================================================================
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-gray);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+        color: var(--pink-primary);
+        transform: translateX(-2px);
+    }
+}
