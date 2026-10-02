@@ -14,22 +14,39 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // whereHas: lewati favorit yang materi/subject-nya sudah dihapus admin
         $favoriteMaterials = Favorite::with('material.subject')
             ->where('user_id', $user->id)
             ->where('type', 'material')
-            ->whereHas('material')
             ->latest()
             ->get();
 
-        $favoriteTopics = Favorite::with('subject')
-            ->where('user_id', $user->id)
-            ->where('type', 'topic')
-            ->whereHas('subject')
-            ->latest()
-            ->get();
+        // ===== PROGRES PER SUBJECT =====
+        $subjects = \App\Models\Subject::all()->map(function ($subject) use ($user) {
+            $materialIds = $subject->materials()->pluck('id')->toArray();
+            $total = count($materialIds);
 
-        return view('profile.index', compact('user', 'favoriteMaterials', 'favoriteTopics'));
+            $completed = 0;
+            if ($total > 0) {
+                $completed = \App\Models\Progress::where('user_id', $user->id)
+                    ->whereIn('material_id', $materialIds)
+                    ->where('is_completed', true)
+                    ->count();
+            }
+
+            $subject->progress_percent = $total > 0 
+                ? round(($completed / $total) * 100) 
+                : 0;
+            $subject->total_materials = $total;
+            $subject->completed_materials = $completed;
+
+            return $subject;
+        });
+
+        return view('profile.index', compact(
+            'user',
+            'favoriteMaterials',
+            'subjects'
+        ));
     }
 
     public function edit(Request $request): View

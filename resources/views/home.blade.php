@@ -3,139 +3,166 @@
 @section('title', 'Home - NarayaLearn')
 
 @section('content')
-<div class="container py-5">
+<div class="home-wrapper">
 
     <!-- ===== HERO SECTION ===== -->
-    <div class="row align-items-center py-4">
-        <div class="col-lg-6">
-            <h1 class="display-4 fw-bold" style="color: #2D1B2E;">
-                Belajar Jadi 
-                <span style="color: #FF6B9D;">Lebih Seru</span>
-            </h1>
-            <p class="lead text-muted" style="font-size: 1.2rem;">
-                Temukan materi, video pembahasan, dan latihan soal 
-                interaktif di <strong>NarayaLearn</strong>.
-            </p>
-            <div class="mt-4 d-flex flex-wrap gap-3">
-                <a href="{{ route('subjects.index') }}" class="btn btn-pink btn-lg">
-                    <i class="fas fa-rocket me-2"></i> Mulai Belajar
-                </a>
-                @guest
-                    <a href="{{ route('register') }}" class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-user-plus me-2"></i> Daftar Gratis
-                    </a>
-                @endguest
-            </div>
-        </div>
-        <div class="col-lg-6 text-center">
-            <div class="p-4 rounded-4" style="background: var(--pink-soft);">
-                <i class="fas fa-graduation-cap" style="font-size: 120px; color: var(--pink-primary);"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== STATISTIK (DINAMIS) ===== -->
-    <div class="row text-center mt-5 g-4">
-        <div class="col-md-3 col-6">
-            <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalSubjects }}</h3>
-                <p class="text-muted mb-0">Mata Pelajaran</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalMaterials }}</h3>
-                <p class="text-muted mb-0">Materi</p>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="p-3 rounded-4" style="background: var(--pink-soft);">
-                <h3 class="fw-bold" style="color: var(--pink-primary);">{{ $totalUsers }}</h3>
-                <p class="text-muted mb-0">Pengguna</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== SUBJECT POPULER (DINAMIS) ===== -->
-    <div class="mt-5">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fw-bold" style="color: #2D1B2E;">
-                <i class="fas fa-book" style="color: var(--pink-primary);"></i> 
-                Mata Pelajaran
-            </h3>
-            <a href="{{ route('subjects.index') }}" class="text-decoration-none" style="color: var(--pink-primary);">
-                Lihat Semua <i class="fas fa-arrow-right"></i>
-            </a>
+    <section class="hero-section">
+        <div class="hero-bg-decor">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
         </div>
 
-        <div class="row g-4 justify-content-center">
-            @forelse($popularSubjects as $subject)
-                <div class="col-md-6 col-lg-3">
-                    <a href="{{ route('subjects.show', $subject) }}" class="text-decoration-none">
-                        <div class="card card-pink h-100 p-3 text-center">
-                            <div class="p-3 rounded-circle mx-auto" style="background: var(--pink-light); width: 70px; height: 70px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-book" style="font-size: 30px; color: var(--pink-primary);"></i>
-                            </div>
-                            <h6 class="mt-3 fw-bold" style="color: #2D1B2E;">{{ $subject->name }}</h6>
-                            <small class="text-muted">{{ $subject->materials_count }} Materi</small>
+        <div class="container position-relative">
+            <div class="row align-items-center g-4 g-lg-5">
+
+                <!-- KIRI: Text -->
+                <div class="col-lg-7">
+                    <div class="hero-pill">
+                        <span class="dot-pulse"></span>
+                        <span>Revolusi Belajar Digital</span>
+                        <i class="fas fa-sparkles"></i>
+                    </div>
+
+                    <h1 class="hero-title">
+                        Belajar Jadi Lebih
+                        <span class="text-gradient">Seru!</span>
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Temukan cara seru menaklukkan pelajaran sekolah dengan materi interaktif yang dirancang khusus untukmu.
+                    </p>
+
+                    <div class="hero-cta">
+                        <a href="{{ route('subjects.index') }}" class="btn btn-pink-gradient">
+                            MULAI BELAJAR SEKARANG
+                            <i class="fas fa-arrow-right ms-2"></i>
+                        </a>
+                        @guest
+                            <a href="{{ route('register') }}" class="btn btn-soft">
+                                Daftar Gratis
+                            </a>
+                        @endguest
+                    </div>
+                </div>
+
+                <!-- KANAN: Maskot -->
+                <div class="col-lg-5 text-center">
+                    <div class="hero-mascot">
+                        <img src="{{ asset('images/hero-student.png') }}"
+                            alt="Ilustrasi Belajar"
+                            class="hero-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== STATISTIK DINAMIS ===== -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row g-2 g-md-4">
+                <!-- Subjects -->
+                <div class="col-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-graduation-cap"></i>
                         </div>
-                    </a>
-                </div>
-            @empty
-                <div class="col-12 text-center py-4">
-                    <i class="fas fa-book-open" style="font-size: 48px; color: #ddd;"></i>
-                    <p class="text-muted mt-3">Belum ada mata pelajaran</p>
-                </div>
-            @endforelse
-        </div>
-    </div>
-
-    <!-- ===== KONTEN TERBARU (DINAMIS) ===== -->
-    @if($latestMaterials->count() > 0)
-    <div class="mt-5">
-        <h3 class="fw-bold mb-4" style="color: #2D1B2E;">
-            <i class="fas fa-clock" style="color: var(--pink-primary);"></i> 
-            Konten Terbaru
-        </h3>
-        <div class="row g-4">
-            @foreach($latestMaterials as $material)
-                <div class="col-md-4">
-                    <a href="{{ route('materials.show', $material) }}" class="text-decoration-none">
-                        <div class="card card-pink p-3">
-                            <div class="card-body">
-                                <span class="badge mb-2" style="background: var(--pink-light); color: var(--pink-primary);">
-                                    @if($material->type == 'material')
-                                        <i class="fas fa-file-alt me-1"></i> Materi
-                                    @elseif($material->type == 'video')
-                                        <i class="fas fa-video me-1"></i> Video
-                                    @else
-                                        <i class="fas fa-tasks me-1"></i> Latihan
-                                    @endif
-                                </span>
-                                <h5 class="mt-2" style="color: #2D1B2E;">{{ $material->title }}</h5>
-                                <p class="text-muted small mb-0">
-                                    <i class="fas fa-book me-1"></i> {{ $material->subject->name ?? 'No Subject' }}
-                                    <span class="mx-2">•</span>
-                                    <i class="fas fa-clock me-1"></i> {{ $material->created_at->diffForHumans() }}
-                                </p>
-                            </div>
+                        <div class="stat-info">
+                            <h3>{{ $totalSubjects }}</h3>
+                            <span class="stat-label">SUBJECT</span>
+                            <small>Kurikulum Terakreditasi</small>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Topics -->
+                <div class="col-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>{{ $totalTopics }}</h3>
+                            <span class="stat-label">TOPIK</span>
+                            <small>Disusun Sistematis</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Materials -->
+                <div class="col-4">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-photo-video"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>{{ $totalMaterials }}</h3>
+                            <span class="stat-label">KONTEN</span>
+                            <small>Video, PDF & Kuis</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== SUBJECT SECTION ===== -->
+    <section class="subjects-section">
+        <div class="container">
+            <div class="subjects-wrapper">
+                <!-- Header -->
+                <div class="text-center mb-4 mb-lg-5">
+                    <div class="section-pill">
+                        <i class="fas fa-compass"></i>
+                        <span>Katalog Belajar</span>
+                    </div>
+                    <h2 class="section-title">Pilih Mata Pelajaran</h2>
+                    <p class="section-subtitle">Mau jago di bidang apa hari ini?</p>
+                </div>
+
+                <!-- Grid Subject -->
+                <div class="row g-3 g-lg-4 mb-4 mb-lg-5">
+                    @forelse($subjects as $subject)
+                        <div class="col-md-6 col-lg-4">
+                            <a href="{{ route('subjects.show', $subject) }}" class="text-decoration-none">
+                                <div class="subject-card">
+                                    <div class="subject-card-top">
+                                        <div class="subject-icon">
+                                            <i class="fas fa-book"></i>
+                                        </div>
+                                    </div>
+                                    <h3 class="subject-name">{{ $subject->name }}</h3>
+                                    <p class="subject-desc">
+                                        Materi lengkap dengan video, PDF, dan latihan soal interaktif.
+                                    </p>
+                                    <div class="subject-badges">
+                                        <span class="badge-soft">
+                                            <i class="fas fa-file-alt"></i>
+                                            {{ $subject->materials_count }} Materi
+                                        </span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @empty
+                        <div class="col-12 text-center py-5">
+                            <i class="fas fa-book-open" style="font-size: 60px; color: var(--text-muted);"></i>
+                            <h5 class="mt-3" style="color: var(--text-dark);">Belum Ada Subject</h5>
+                            <p class="text-muted">Subject akan muncul di sini setelah admin menambahkannya.</p>
+                        </div>
+                    @endforelse
+                </div>
+
+                <!-- Tombol Lihat Semua -->
+                <div class="text-center">
+                    <a href="{{ route('subjects.index') }}" class="btn btn-outline-pink">
+                        Lihat Semua Pelajaran
+                        <i class="fas fa-arrow-right ms-2"></i>
                     </a>
                 </div>
-            @endforeach
+            </div>
         </div>
-    </div>
-    @endif
+    </section>
 
-    <!-- ===== CTA UNTUK GUEST ===== -->
-    @guest
-        <div class="mt-5 p-5 text-center rounded-4" style="background: var(--pink-soft);">
-            <h3 style="color: #2D1B2E;">Siap Belajar?</h3>
-            <p class="text-muted">Daftar sekarang dan mulai perjalanan belajarmu!</p>
-            <a href="{{ route('register') }}" class="btn btn-pink btn-lg">
-                <i class="fas fa-user-plus me-2"></i> Daftar Gratis
-            </a>
-        </div>
-    @endguest
 </div>
 @endsection

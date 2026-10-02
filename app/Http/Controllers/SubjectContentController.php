@@ -12,34 +12,51 @@ class SubjectContentController extends Controller
     public function index()
     {
         $subjects = Subject::all()->map(function ($subject) {
-            $topicCount = $subject->materials()
+            $subject->topics_count = $subject->materials()
                 ->distinct()
                 ->pluck('title')
                 ->count();
-            
-            $subject->topics_count = $topicCount;
             return $subject;
         });
 
         return view('subjects.index', compact('subjects'));
     }
 
+    /**
+     * Halaman detail subject — tampilkan daftar topik.
+     */
     public function show(Subject $subject)
     {
         $grouped = $subject->materials()->get()->groupBy('title');
 
+        // Tiap topik diwakilin 1 material (prioritas: "material")
         $topics = $grouped->map(function ($group) {
             return $group->firstWhere('type', 'material') ?? $group->first();
         });
 
-        $favoriteIds = Favorite::where('user_id', auth()->id())->pluck('material_id')->toArray();
+        $favoriteIds = auth()->check()
+            ? Favorite::where('user_id', auth()->id())->pluck('material_id')->toArray()
+            : [];
 
         return view('subjects.show', compact('subject', 'topics', 'favoriteIds'));
     }
 
+    /**
+     * Halaman detail topik — tampilkan materi, video, latihan.
+     */
     public function showTopic(Subject $subject, $topic)
     {
-        $materials = $subject->materials()->where('title', $topic)->get()->keyBy('type');
+        $materials = $subject->materials()
+            ->where('title', $topic)
+            ->get()
+            ->keyBy('type');
+
+        $favoriteIds = auth()->check()
+            ? Favorite::where('user_id', auth()->id())
+                ->where('type', 'material')
+                ->pluck('material_id')
+                ->toArray()
+            : [];
 
         $isTopicFavorited = auth()->check()
             ? Favorite::where('user_id', auth()->id())
@@ -49,9 +66,18 @@ class SubjectContentController extends Controller
                 ->exists()
             : false;
 
-        return view('subjects.topic', compact('subject', 'topic', 'materials', 'isTopicFavorited'));
+        return view('subjects.topic', compact(
+            'subject',
+            'topic',
+            'materials',
+            'favoriteIds',
+            'isTopicFavorited'
+        ));
     }
 
+    /**
+     * Halaman detail material (PDF, video, gambar).
+     */
     public function showMaterial(Material $material)
     {
         $material->load('subject');
@@ -66,12 +92,20 @@ class SubjectContentController extends Controller
         return view('materials.show', compact('material', 'isFavorited'));
     }
 
+    /**
+     * Download file material.
+     */
     public function download($material)
     {
         $material = Material::findOrFail($material);
+
         if (!$material->file_path) {
             abort(404);
         }
-        return Storage::disk('public')->download($material->file_path, $material->title . '.pdf');
+
+        return Storage::disk('public')->download(
+            $material->file_path,
+            $material->title . '.pdf'
+        );
     }
 }

@@ -12,25 +12,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalSubjects = Subject::count();
-        $totalMaterials = Material::count();
-        $totalUsers = User::count();
+        $data = [
+            'totalSubjects' => \App\Models\Subject::count(),
+            'totalMaterials' => \App\Models\Material::count(),
+            'totalUsers' => \App\Models\User::count(),
+            'totalAvatars' => \App\Models\Avatar::count(),
+            'latestUsers' => \App\Models\User::latest()->take(4)->get(),
+            'latestMaterials' => \App\Models\Material::with('subject')->latest()->take(4)->get(),
+        ];
 
-        $latestUsers = User::latest()->take(5)->get();
-        $latestMaterials = Material::with('subject')->latest()->take(5)->get();
-
-        $latestFavorites = Favorite::with(['user', 'material.subject', 'subject'])
-            ->latest()
-            ->take(5)
-            ->get();
-
-        return view('admin.dashboard', compact(
-            'totalSubjects',
-            'totalMaterials',
-            'totalUsers',
-            'latestUsers',
-            'latestMaterials',
-            'latestFavorites'
-        ));
+        return view('admin.dashboard', $data);
     }
 }

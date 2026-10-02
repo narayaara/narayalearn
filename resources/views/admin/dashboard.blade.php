@@ -1,191 +1,317 @@
 @extends('layouts.admin')
 
-@section('title', 'Admin Dashboard - NarayaLearn')
+@section('title', 'Dashboard - NarayaLearn Admin')
+@section('breadcrumb', 'Dashboard')
 
 @section('admin-content')
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+
+<!-- ===== PAGE HEADER ===== -->
+<div class="admin-page-header">
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-3">
         <div>
-            <h2 class="fw-bold" style="color: #2D1B2E;">
-                <i class="fas fa-tachometer-alt" style="color: #FF6B9D;"></i>
-                Admin Dashboard
-            </h2>
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <span class="admin-pill">
+                    <i class="fas fa-shield-halved"></i> ADMIN PANEL
+                </span>
+                <span class="admin-live-badge">
+                    <span class="dot-pulse"></span> Live Sync
+                </span>
+            </div>
+            <h1 class="admin-page-title">Dashboard</h1>
+            <p class="admin-page-subtitle mb-0">
+                Selamat datang kembali, <strong>{{ Auth::user()->name }}</strong>
+            </p>
         </div>
-        <div>
-            <span class="badge" style="background: #FF6B9D; padding: 8px 16px; font-size: 0.9rem;">
-                <i class="fas fa-crown me-2"></i> Administrator
-            </span>
+
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="{{ route('home') }}" class="admin-btn-outline">
+                <i class="fas fa-arrow-up-right-from-square"></i>
+                Kembali ke Website
+            </a>
+            <a href="{{ route('admin.materials.create') }}" class="admin-btn-primary">
+                <i class="fas fa-plus"></i>
+                Materi Baru
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ===== STATISTIK 4 CARD ===== -->
+<div class="row g-3 mb-4">
+    <!-- Subject -->
+    <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+            <div class="stat-card-top">
+                <div class="stat-card-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <span class="stat-card-trend">
+                    <i class="fas fa-chart-line"></i> Aktif
+                </span>
+            </div>
+            <div class="stat-card-value">
+                <h3>{{ $totalSubjects ?? 0 }}</h3>
+            </div>
+            <div class="stat-card-label-big">SUBJECT</div>
+            <p class="stat-card-desc">Total mata pelajaran aktif</p>
         </div>
     </div>
 
-    <!-- Statistik Cards -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-4 col-6">
-            <div class="card border-0 shadow-sm rounded-4 p-3" style="border-left: 4px solid #FF6B9D;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Total Subject</small>
-                        <h3 class="fw-bold mb-0" style="color: #2D1B2E;">{{ $totalSubjects }}</h3>
-                    </div>
-                    <div class="p-3 rounded-circle" style="background: #FFE0EB;">
-                        <i class="fas fa-book" style="color: #FF6B9D; font-size: 24px;"></i>
-                    </div>
+    <!-- Materi -->
+    <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+            <div class="stat-card-top">
+                <div class="stat-card-icon stat-icon-pink">
+                    <i class="fas fa-file-alt"></i>
                 </div>
+                <span class="stat-card-trend">
+                    <i class="fas fa-bolt"></i> 3 Format
+                </span>
             </div>
-        </div>
-        <div class="col-md-4 col-6">
-            <div class="card border-0 shadow-sm rounded-4 p-3" style="border-left: 4px solid #FF8FB5;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Total Materi</small>
-                        <h3 class="fw-bold mb-0" style="color: #2D1B2E;">{{ $totalMaterials }}</h3>
-                    </div>
-                    <div class="p-3 rounded-circle" style="background: #FFE0EB;">
-                        <i class="fas fa-file-alt" style="color: #FF6B9D; font-size: 24px;"></i>
-                    </div>
-                </div>
+            <div class="stat-card-value">
+                <h3>{{ $totalMaterials ?? 0 }}</h3>
             </div>
-        </div>
-        <div class="col-md-4 col-6">
-            <div class="card border-0 shadow-sm rounded-4 p-3" style="border-left: 4px solid #FFA8C5;">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <small class="text-muted">Total User</small>
-                        <h3 class="fw-bold mb-0" style="color: #2D1B2E;">{{ $totalUsers }}</h3>
-                    </div>
-                    <div class="p-3 rounded-circle" style="background: #FFE0EB;">
-                        <i class="fas fa-users" style="color: #FF6B9D; font-size: 24px;"></i>
-                    </div>
-                </div>
-            </div>
+            <div class="stat-card-label-big">MATERI</div>
+            <p class="stat-card-desc">Modul PDF, video & latihan</p>
         </div>
     </div>
 
-    <!-- Aktivitas Terbaru -->
-    <div class="row g-4">
-        <!-- User Terbaru -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-transparent border-0 pt-3">
-                    <h5 class="fw-bold mb-0" style="color: #2D1B2E;">
-                        <i class="fas fa-user-plus" style="color: #FF6B9D;"></i> User Terbaru
-                    </h5>
+    <!-- User -->
+    <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+            <div class="stat-card-top">
+                <div class="stat-card-icon stat-icon-rose">
+                    <i class="fas fa-users"></i>
                 </div>
-                <div class="card-body">
-                    @forelse($latestUsers as $user)
-                        <div class="d-flex align-items-center gap-3 mb-2 p-2 rounded-3" style="background: #FFF5F8;">
-                            <div class="rounded-circle bg-white p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 2px solid #FFE0EB;">
-                                @if($user->avatar)
-                                    <img src="{{ asset('storage/avatars/'.$user->avatar) }}" class="rounded-circle" width="36" height="36">
+                <span class="stat-card-trend">
+                    <i class="fas fa-check-circle"></i> 100% Aktif
+                </span>
+            </div>
+            <div class="stat-card-value">
+                <h3>{{ $totalUsers ?? 0 }}</h3>
+            </div>
+            <div class="stat-card-label-big">USER</div>
+            <p class="stat-card-desc">Siswa & pengajar terdaftar</p>
+        </div>
+    </div>
+
+    <!-- Avatar -->
+    <div class="col-6 col-xl-3">
+        <div class="admin-stat-card">
+            <div class="stat-card-top">
+                <div class="stat-card-icon stat-icon-soft">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <span class="stat-card-trend">
+                    <i class="fas fa-star"></i> Koleksi
+                </span>
+            </div>
+            <div class="stat-card-value">
+                <h3>{{ $totalAvatars ?? 0 }}</h3>
+            </div>
+            <div class="stat-card-label-big">AVATAR</div>
+            <p class="stat-card-desc">Koleksi avatar profil siswa</p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== AKTIVITAS ===== -->
+<div class="row g-4 mb-4">
+
+    <!-- USER TERBARU -->
+    <div class="col-lg-6">
+        <div class="admin-activity-card">
+            <div class="activity-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="activity-section-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h5 class="activity-title">User Terbaru</h5>
+                        <p class="activity-subtitle">Pendaftar terbaru platform</p>
+                    </div>
+                </div>
+                <span class="activity-count">{{ $latestUsers->count() }} akun</span>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+                @forelse($latestUsers as $user)
+                    <div class="activity-item">
+                        <div class="d-flex align-items-center gap-3 min-width-0 flex-grow-1">
+                            @if($user->avatar)
+                                <img src="{{ asset('storage/avatars/'.$user->avatar) }}" 
+                                     class="activity-avatar" alt="{{ $user->name }}">
+                            @else
+                                <div class="activity-avatar-placeholder">
+                                    {{ strtoupper(substr($user->name, 0, 2)) }}
+                                </div>
+                            @endif
+                            <div class="min-width-0">
+                                <div class="activity-name">{{ $user->name }}</div>
+                                <small class="activity-email">{{ $user->email }}</small>
+                            </div>
+                        </div>
+                        <span class="activity-badge {{ $user->role === 'admin' ? 'badge-admin' : 'badge-user' }}">
+                            {{ $user->role === 'admin' ? 'Admin' : 'User' }}
+                        </span>
+                    </div>
+                @empty
+                    <div class="text-center py-4 text-muted small">
+                        Belum ada user
+                    </div>
+                @endforelse
+            </div>
+
+            <a href="{{ route('admin.users.index') }}" class="activity-link">
+                Lihat semua user
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- MATERI TERBARU -->
+    <div class="col-lg-6">
+        <div class="admin-activity-card">
+            <div class="activity-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="activity-section-icon stat-icon-pink">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <div>
+                        <h5 class="activity-title">Materi Terbaru</h5>
+                        <p class="activity-subtitle">Update kurikulum terakhir</p>
+                    </div>
+                </div>
+                <span class="activity-count">Terpublikasi</span>
+            </div>
+
+            <div class="d-flex flex-column gap-2">
+                @forelse($latestMaterials as $material)
+                    <div class="activity-item">
+                        <div class="d-flex align-items-center gap-3 min-width-0 flex-grow-1">
+                            <div class="activity-icon-mini">
+                                @if($material->type === 'video')
+                                    <i class="fas fa-play"></i>
+                                @elseif($material->type === 'exercise')
+                                    <i class="fas fa-pen"></i>
                                 @else
-                                    <i class="fas fa-user" style="color: #FF6B9D; font-size: 18px;"></i>
+                                    <i class="fas fa-file-pdf"></i>
                                 @endif
                             </div>
-                            <div class="flex-grow-1 min-width-0">
-                                <div class="fw-bold text-truncate" style="color: #2D1B2E; font-size: 0.9rem;">{{ $user->name }}</div>
-                                <small class="text-muted text-truncate d-block">{{ $user->email }}</small>
-                            </div>
-                            <span class="badge bg-light text-muted flex-shrink-0">{{ $user->created_at->diffForHumans() }}</span>
-                        </div>
-                    @empty
-                        <p class="text-muted text-center">Belum ada user</p>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-
-        <!-- Materi Terbaru -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-transparent border-0 pt-3">
-                    <h5 class="fw-bold mb-0" style="color: #2D1B2E;">
-                        <i class="fas fa-file-upload" style="color: #FF6B9D;"></i> Materi Terbaru
-                    </h5>
-                </div>
-                <div class="card-body">
-                    @forelse($latestMaterials as $material)
-                        <div class="d-flex align-items-center gap-3 mb-2 p-2 rounded-3" style="background: #FFF5F8;">
-                            <div class="rounded-circle bg-white p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 2px solid #FFE0EB;">
-                                <i class="fas fa-file" style="color: #FF6B9D; font-size: 18px;"></i>
-                            </div>
-                            <div class="flex-grow-1 min-width-0">
-                                <div class="fw-bold text-truncate" style="color: #2D1B2E; font-size: 0.9rem;">{{ $material->title }}</div>
-                                <small class="text-muted text-truncate d-block">{{ $material->subject->name ?? 'No Subject' }}</small>
-                            </div>
-                            <span class="badge flex-shrink-0" style="background: #FFE0EB; color: #FF6B9D;">
-                                {{ ucfirst($material->type) }}
-                            </span>
-                        </div>
-                    @empty
-                        <p class="text-muted text-center">Belum ada materi</p>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-
-        <!-- Favorite Terbaru -->
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-header bg-transparent border-0 pt-3">
-                    <h5 class="fw-bold mb-0" style="color: #2D1B2E;">
-                        <i class="fas fa-heart" style="color: #FF6B9D;"></i> Favorite Terbaru
-                    </h5>
-                </div>
-                <div class="card-body">
-                    @forelse($latestFavorites as $fav)
-                        <div class="d-flex align-items-center gap-3 mb-2 p-2 rounded-3" style="background: #FFF5F8;">
-                            <div class="rounded-circle bg-white p-2" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 2px solid #FFE0EB;">
-                                <i class="fas fa-heart" style="color: #FF6B9D; font-size: 16px;"></i>
-                            </div>
-                            <div class="flex-grow-1 min-width-0">
-                                <div class="fw-bold text-truncate" style="color: #2D1B2E; font-size: 0.9rem;">
-                                    {{ $fav->user->name ?? 'Unknown' }}
-                                </div>
-                                <small class="text-muted text-truncate d-block">
-                                    @if($fav->type === 'topic')
-                                        {{ $fav->topic_name }} • {{ $fav->subject->name ?? '-' }}
-                                    @else
-                                        {{ $fav->material->title ?? 'Unknown' }} • {{ $fav->material->subject->name ?? '-' }}
-                                    @endif
+                            <div class="min-width-0">
+                                <div class="activity-name">{{ $material->title }}</div>
+                                <small class="activity-email">
+                                    {{ $material->subject->name ?? '-' }} • 
+                                    {{ ucfirst($material->type) }}
                                 </small>
                             </div>
-                            <span class="badge flex-shrink-0" style="background: #FFE0EB; color: #FF6B9D;">
-                                {{ $fav->type === 'topic' ? 'Topik' : ucfirst($fav->material->type ?? '-') }}
-                            </span>
                         </div>
-                    @empty
-                        <p class="text-muted text-center">Belum ada favorite</p>
-                    @endforelse
-                </div>
+                        <span class="activity-badge badge-type">
+                            {{ ucfirst($material->type) }}
+                        </span>
+                    </div>
+                @empty
+                    <div class="text-center py-4 text-muted small">
+                        Belum ada materi
+                    </div>
+                @endforelse
             </div>
+
+            <a href="{{ route('admin.materials.index') }}" class="activity-link">
+                Lihat semua materi
+                <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="row g-3 mt-4">
-        <div class="col-md-4 col-6">
-            <a href="{{ route('admin.subjects.index') }}" class="text-decoration-none">
-                <div class="card border-0 shadow-sm rounded-4 text-center p-4 quick-action-card">
-                    <i class="fas fa-book" style="font-size: 32px; color: #FF6B9D;"></i>
-                    <h6 class="mt-2 fw-bold" style="color: #2D1B2E;">Kelola Subject</h6>
+</div>
+
+<!-- ===== AKSI CEPAT ===== -->
+<div class="mb-4">
+    <div class="mb-3">
+        <h5 class="activity-title">Aksi Cepat</h5>
+        <p class="activity-subtitle">Pintasan administrasi dan pengelolaan data</p>
+    </div>
+
+    <div class="row g-3">
+        <!-- Kelola Subject -->
+        <div class="col-6 col-xl-3">
+            <a href="{{ route('admin.subjects.index') }}" class="admin-action-card">
+                <div class="action-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h6 class="action-title">Kelola Subject</h6>
+                <p class="action-desc">Tambah, edit kurikulum, dan atur jenjang mata pelajaran.</p>
+                <div class="action-footer">
+                    <span>Kelola</span>
+                    <i class="fas fa-arrow-right"></i>
                 </div>
             </a>
         </div>
-        <div class="col-md-4 col-6">
-            <a href="{{ route('admin.materials.index') }}" class="text-decoration-none">
-                <div class="card border-0 shadow-sm rounded-4 text-center p-4 quick-action-card">
-                    <i class="fas fa-file-alt" style="font-size: 32px; color: #FF6B9D;"></i>
-                    <h6 class="mt-2 fw-bold" style="color: #2D1B2E;">Kelola Materi</h6>
+
+        <!-- Kelola Materi -->
+        <div class="col-6 col-xl-3">
+            <a href="{{ route('admin.materials.index') }}" class="admin-action-card">
+                <div class="action-icon stat-icon-pink">
+                    <i class="fas fa-file-circle-plus"></i>
+                </div>
+                <h6 class="action-title">Kelola Materi</h6>
+                <p class="action-desc">Upload PDF, sematkan link YouTube, dan latihan soal.</p>
+                <div class="action-footer">
+                    <span>Kelola</span>
+                    <i class="fas fa-arrow-right"></i>
                 </div>
             </a>
         </div>
-        <div class="col-md-4 col-6">
-            <a href="{{ route('admin.users.index') }}" class="text-decoration-none">
-                <div class="card border-0 shadow-sm rounded-4 text-center p-4 quick-action-card">
-                    <i class="fas fa-users" style="font-size: 32px; color: #FF6B9D;"></i>
-                    <h6 class="mt-2 fw-bold" style="color: #2D1B2E;">Kelola User</h6>
+
+        <!-- Kelola User -->
+        <div class="col-6 col-xl-3">
+            <a href="{{ route('admin.users.index') }}" class="admin-action-card">
+                <div class="action-icon stat-icon-rose">
+                    <i class="fas fa-user-cog"></i>
+                </div>
+                <h6 class="action-title">Kelola User</h6>
+                <p class="action-desc">Verifikasi akun siswa, kelola hak akses dan peran admin.</p>
+                <div class="action-footer">
+                    <span>Kelola</span>
+                    <i class="fas fa-arrow-right"></i>
+                </div>
+            </a>
+        </div>
+
+        <!-- Kelola Avatar -->
+        <div class="col-6 col-xl-3">
+            <a href="{{ route('admin.avatars.index') }}" class="admin-action-card">
+                <div class="action-icon stat-icon-soft">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <h6 class="action-title">Kelola Avatar</h6>
+                <p class="action-desc">Atur katalog stiker & avatar profil yang dapat dipilih siswa.</p>
+                <div class="action-footer">
+                    <span>Kelola</span>
+                    <i class="fas fa-arrow-right"></i>
                 </div>
             </a>
         </div>
     </div>
+</div>
+
+<!-- ===== TIPS BANNER ===== -->
+<div class="admin-tips-banner">
+    <div class="tips-banner-icon">
+        <i class="fas fa-lightbulb"></i>
+    </div>
+    <div class="flex-grow-1 min-width-0">
+        <div class="d-flex align-items-center gap-2 mb-1">
+            <span class="tips-banner-label">TIPS ADMIN</span>
+            <span class="tips-banner-tag">
+                <span class="dot"></span> Sinkronisasi Otomatis
+            </span>
+        </div>
+        <p class="tips-banner-text mb-0">
+            Semua perubahan data akan langsung tampil <strong>real-time</strong> di aplikasi siswa tanpa perlu restart server.
+        </p>
+    </div>
+</div>
+
 @endsection

@@ -12,8 +12,37 @@ class MaterialController extends Controller
 {
     public function index()
     {
-        $materials = Material::with('subject')->latest()->get();
-        return view('admin.materials.index', compact('materials'));
+        $materials = Material::with('subject')
+            ->latest()
+            ->paginate(10);
+
+        // Statistik
+        $totalMaterials = Material::count();
+        $totalPdf = Material::where('type', 'material')->count();
+        $totalVideo = Material::where('type', 'video')->count();
+        $totalExercise = Material::where('type', 'exercise')->count();
+
+        // Statistik tambahan (opsional)
+        $thisMonthMaterials = Material::whereMonth('created_at', now()->month)
+            ->whereYear('created_at', now()->year)
+            ->count();
+        $thisWeekVideos = Material::where('type', 'video')
+            ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+            ->count();
+
+        // Buat filter dropdown
+        $subjects = \App\Models\Subject::orderBy('name')->get();
+
+        return view('admin.materials.index', compact(
+            'materials',
+            'totalMaterials',
+            'totalPdf',
+            'totalVideo',
+            'totalExercise',
+            'thisMonthMaterials',
+            'thisWeekVideos',
+            'subjects'
+        ));
     }
 
     public function create()

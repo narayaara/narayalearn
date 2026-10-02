@@ -28,4 +28,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Material::class, 'favorites');
     }
+
+    public function progress()
+    {
+        return $this->hasMany(Progress::class);
+    }
 }

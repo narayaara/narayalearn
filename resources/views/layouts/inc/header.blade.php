@@ -1,11 +1,10 @@
-<nav class="navbar navbar-expand-md navbar-pink shadow-sm sticky-top">
-    <div class="container-fluid px-4 px-lg-5">
+<nav class="navbar navbar-expand-md navbar-pink navbar-floating sticky-top">
+    <div class="container-fluid px-3 px-lg-4">
         <!-- Brand -->
         <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{{ url('/') }}">
             <i class="fas fa-graduation-cap"></i>
             <span>NarayaLearn</span>
         </a>
-
         <!-- Toggler -->
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" 
                 data-bs-target="#navbarNav" aria-controls="navbarNav" 

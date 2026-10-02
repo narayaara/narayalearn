@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Subject;
+use App\Models\Material;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -11,7 +12,18 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Subject::withCount('materials')->latest()->get();
-        return view('admin.subjects.index', compact('subjects'));
+
+        // Statistik
+        $totalSubjects = $subjects->count();
+        $totalTopics = Material::distinct()->pluck('title')->count();
+        $totalMaterials = Material::count();
+
+        return view('admin.subjects.index', compact(
+            'subjects',
+            'totalSubjects',
+            'totalTopics',
+            'totalMaterials'
+        ));
     }
 
     public function create()
@@ -31,7 +43,9 @@ class SubjectController extends Controller
 
         Subject::create($request->only('name'));
 
-        return redirect()->route('admin.subjects.index')->with('success', 'Subject successfully added.');
+        return redirect()
+            ->route('admin.subjects.index')
+            ->with('success', 'Subject berhasil ditambahkan!');
     }
 
     public function edit(Subject $subject)
@@ -44,20 +58,24 @@ class SubjectController extends Controller
         $request->validate([
             'name' => 'required|string|max:128|unique:subjects,name,' . $subject->id,
         ], [
-            'name.unique' => 'This subject name is already taken.',
-            'name.required' => 'Subject name is required.',
-            'name.max' => 'Subject name may not be greater than 128 characters.',
+            'name.unique' => 'Nama mata pelajaran ini sudah dipakai.',
+            'name.required' => 'Nama mata pelajaran wajib diisi.',
+            'name.max' => 'Nama maksimal 128 karakter.',
         ]);
 
         $subject->update($request->only('name'));
 
-        return redirect()->route('admin.subjects.index')->with('success', 'Subject successfully updated.');
+        return redirect()
+            ->route('admin.subjects.index')
+            ->with('success', 'Subject berhasil diperbarui!');
     }
 
     public function destroy(Subject $subject)
     {
         $subject->delete();
 
-        return redirect()->route('admin.subjects.index')->with('success', 'Subject successfully deleted.');
+        return redirect()
+            ->route('admin.subjects.index')
+            ->with('success', 'Subject berhasil dihapus!');
     }
 }

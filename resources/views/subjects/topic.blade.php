@@ -3,93 +3,130 @@
 @section('title', $subject->name . ' - ' . $topic . ' - NarayaLearn')
 
 @section('content')
-<div class="container py-4" style="max-width: 1100px;">
+<div class="container py-4" style="max-width: 1200px;">
 
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-2">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="{{ route('home') }}" style="color: var(--pink-primary);">Home</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="{{ route('subjects.index') }}" style="color: var(--pink-primary);">Subjects</a>
-            </li>
-            <li class="breadcrumb-item">
-                <a href="{{ route('subjects.show', $subject) }}" style="color: var(--pink-primary);">
-                    {{ $subject->name }}
-                </a>
-            </li>
-            <li class="breadcrumb-item active">{{ $topic }}</li>
-        </ol>
-    </nav>
-
-    <!-- Back link -->
-    <a href="{{ route('subjects.show', $subject) }}" class="back-link mb-3">
-        <i class="fas fa-arrow-left"></i> Back to {{ $subject->name }}
-    </a>
-
-    <!-- Header -->
-    <div class="mb-4">
-        <h2 class="fw-bold mb-1" style="color: var(--text-dark);">
-            {{ $topic }}
-        </h2>
-        <p class="mb-0 small" style="color: var(--text-gray);">
-            {{ $subject->name }} • Choose topic 
-        </p>
+    <!-- ===== HEADER — BACK + JUDUL INLINE ===== -->
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a href="{{ route('subjects.show', $subject) }}" class="back-icon-btn" title="Kembali">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div>
+            <h1 class="topic-page-title mb-0">{{ $topic }}</h1>
+            <p class="topic-page-desc mb-0">{{ $subject->name }} • Pilih tipe konten yang ingin dipelajari</p>
+        </div>
     </div>
 
-    @php
-        $cards = [
-            ['data' => $materials['material'] ?? null, 'icon' => 'fa-file-alt', 'label' => 'Materi',  'desc' => 'Read learning material'],
-            ['data' => $materials['video'] ?? null,    'icon' => 'fa-video',    'label' => 'Video',    'desc' => 'Watch explanation videos'],
-            ['data' => $materials['exercise'] ?? null, 'icon' => 'fa-pen',      'label' => 'Exercise',  'desc' => 'Complete practice exercises'],
-        ];
-    @endphp
+    <!-- ===== CARD LIST ===== -->
+    <div class="row g-4">
 
-    <!-- Tab Cards -->
-    <div class="row g-3">
-        @foreach($cards as $card)
-            <div class="col-md-4">
-                <div class="card-material-wrapper position-relative h-100">
-                    @if($card['data'])
-                        <div class="card-material card border-0 rounded-4 p-4 text-center h-100"
-                             style="background: var(--bg-card); box-shadow: var(--shadow-card);">
-                            <a href="{{ route('materials.show', $card['data']) }}" class="stretched-link text-decoration-none"></a>
-                            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3"
-                                 style="width: 70px; height: 70px; background: var(--pink-light);">
-                                <i class="fas {{ $card['icon'] }}" style="color: var(--pink-primary); font-size: 28px;"></i>
+        @php
+            $cardConfig = [
+                'material' => [
+                    'icon' => 'fa-book-open',
+                    'title' => 'Materi Belajar',
+                    'badge' => 'PDF Modul',
+                    'desc' => 'Ringkasan konsep, sifat-sifat, dan contoh soal lengkap dalam bentuk PDF.',
+                    'meta_icon' => 'fa-file-pdf',
+                    'meta_text' => 'Baca materi',
+                    'btn_text' => 'Buka Materi',
+                ],
+                'video' => [
+                    'icon' => 'fa-play-circle',
+                    'title' => 'Video Pembahasan',
+                    'badge' => 'Video HD',
+                    'desc' => 'Penjelasan interaktif dari guru ahli dalam format video.',
+                    'meta_icon' => 'fa-clock',
+                    'meta_text' => 'Tonton video',
+                    'btn_text' => 'Tonton Video',
+                ],
+                'exercise' => [
+                    'icon' => 'fa-pen-to-square',
+                    'title' => 'Latihan Soal',
+                    'badge' => 'Latihan',
+                    'desc' => 'Kerjakan latihan soal untuk menguji pemahamanmu.',
+                    'meta_icon' => 'fa-tasks',
+                    'meta_text' => 'Kerjakan',
+                    'btn_text' => 'Mulai Latihan',
+                ],
+            ];
+        @endphp
+
+        @foreach($cardConfig as $type => $config)
+            @php
+                $data = $materials[$type] ?? null;
+            @endphp
+
+            <div class="col-md-6 col-lg-4">
+                @if($data)
+                    {{-- ===== CARD AKTIF ===== --}}
+                    <a href="{{ route('materials.show', $data) }}" class="text-decoration-none d-block h-100">
+                        <div class="topic-content-card">
+                            <div class="card-top">
+                                <div class="card-icon">
+                                    <i class="fas {{ $config['icon'] }}"></i>
+                                </div>
                             </div>
-                            <h5 class="fw-bold mb-1" style="color: var(--text-dark);">{{ $card['label'] }}</h5>
-                            <p class="small mb-0" style="color: var(--text-gray);">
-                                {{ $card['desc'] }}
-                            </p>
+
+                            <div class="card-body-custom">
+                                <div class="d-flex align-items-center gap-2 mb-2">
+                                    <h5 class="card-title-custom">{{ $config['title'] }}</h5>
+                                </div>
+                                <span class="card-badge mb-2 d-inline-block">{{ $config['badge'] }}</span>
+                                <p class="card-desc">{{ $config['desc'] }}</p>
+                            </div>
+
+                            <div class="card-footer-custom">
+                                <span class="card-meta">
+                                    <i class="fas {{ $config['meta_icon'] }}"></i>
+                                    {{ $config['meta_text'] }}
+                                </span>
+                                <span class="card-action-btn">
+                                    {{ $config['btn_text'] }}
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </a>
+
+                @else
+                    {{-- ===== CARD DISABLED ===== --}}
+                    <div class="topic-content-card disabled h-100">
+                        <div class="card-top">
+                            <div class="card-icon">
+                                <i class="fas {{ $config['icon'] }}"></i>
+                            </div>
+                            <span class="card-coming-soon">Segera Hadir</span>
                         </div>
 
-                        @auth
-                            <form action="{{ route('favorites.toggle', $card['data']) }}" method="POST" class="favorite-btn-form">
-                                @csrf
-                                <button type="submit" class="favorite-btn {{ in_array($card['data']->id, $favoriteIds) ? 'is-favorited' : '' }}"
-                                        aria-label="Favorite">
-                                    <i class="fa{{ in_array($card['data']->id, $favoriteIds) ? 's' : 'r' }} fa-heart"></i>
-                                </button>
-                            </form>
-                        @endauth
-                    @else
-                        <div class="card border-0 rounded-4 p-4 text-center h-100"
-                             style="background: var(--bg-card); box-shadow: var(--shadow-card); opacity: 0.5;">
-                            <div class="rounded-circle mx-auto d-flex align-items-center justify-content-center mb-3"
-                                 style="width: 70px; height: 70px; background: var(--pink-light);">
-                                <i class="fas {{ $card['icon'] }}" style="color: var(--pink-primary); font-size: 28px;"></i>
-                            </div>
-                            <h5 class="fw-bold mb-1" style="color: var(--text-dark);">{{ $card['label'] }}</h5>
-                            <p class="small mb-0" style="color: var(--text-gray);">
-                                Not empty
-                            </p>
+                        <div class="card-body-custom">
+                            <h5 class="card-title-custom">{{ $config['title'] }}</h5>
+                            <p class="card-desc">Belum tersedia</p>
                         </div>
-                    @endif
-                </div>
+
+                        <div class="card-footer-custom">
+                            <span class="card-meta">
+                                <i class="fas fa-lock"></i>
+                                Sedang disiapkan
+                            </span>
+                            <span class="card-locked-btn">Terkunci</span>
+                        </div>
+                    </div>
+                @endif
             </div>
         @endforeach
+    </div>
+
+    <!-- ===== TIPS BANNER ===== -->
+    <div class="tips-banner mt-4">
+        <div class="tips-icon">
+            <i class="fas fa-lightbulb"></i>
+        </div>
+        <div>
+            <span class="tips-label">Tips Naraya</span>
+            <p class="tips-text">
+                Selesaikan materi dulu, baru tonton video, lalu kerjakan latihan soal!
+            </p>
+        </div>
     </div>
 
 </div>

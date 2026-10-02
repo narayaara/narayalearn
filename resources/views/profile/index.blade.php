@@ -12,76 +12,139 @@
         </div>
     @endif
 
-    {{-- HEADER PROFIL --}}
-    <div class="card border-0 rounded-4 p-4 mb-4">
-        <div class="d-flex align-items-center gap-3 flex-wrap">
-            @if($user->avatar)
-                <img src="{{ asset('storage/avatars/'.$user->avatar) }}" class="profile-avatar" alt="{{ $user->name }}">
-            @else
-                <div class="profile-avatar profile-avatar-placeholder">
-                    <i class="fas fa-user"></i>
-                </div>
-            @endif
-
-            <div class="flex-grow-1">
-                <h5 class="fw-bold mb-0">
-                    {{ $user->name }}
-                    @if($user->role === 'admin')
-                        <span class="profile-role-badge ms-2">Admin</span>
+    {{-- ===== PROFILE HEADER CARD ===== --}}
+    <div class="profile-header-card mb-4">
+        <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+            <div class="d-flex align-items-center gap-3">
+                {{-- Avatar --}}
+                <div class="profile-avatar-wrapper">
+                    @if($user->avatar)
+                        <img src="{{ asset('storage/avatars/'.$user->avatar) }}" 
+                             alt="{{ $user->name }}" 
+                             class="profile-avatar-img">
+                    @else
+                        <div class="profile-avatar-placeholder">
+                            <i class="fas fa-user"></i>
+                        </div>
                     @endif
-                </h5>
-                <small class="text-muted">{{ $user->email }}</small>
+                    <span class="profile-status-dot"></span>
+                </div>
+
+                {{-- Info --}}
+                <div>
+                    <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                        <h5 class="profile-name mb-0">{{ $user->name }}</h5>
+                        @if($user->role === 'admin')
+                            <span class="profile-badge-admin">Admin</span>
+                        @else
+                            <span class="profile-badge-user">Siswa</span>
+                        @endif
+                    </div>
+                    <p class="profile-email mb-0">{{ $user->email }}</p>
+                </div>
             </div>
 
-            <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary btn-sm rounded-3">
-                <i class="fas fa-pen me-1"></i> Edit Profile
+            {{-- Edit Button --}}
+            <a href="{{ route('profile.edit') }}" class="profile-edit-btn">
+                <i class="fas fa-pen"></i> Edit Profile
             </a>
         </div>
     </div>
 
-    {{-- MATERI FAVORIT --}}
-    <h5 class="profile-section-title">
-        <i class="fas fa-heart"></i> Materi Favorit
-    </h5>
+    {{-- ===== PROGRES BELAJAR PER SUBJECT ===== --}}
+    <div class="profile-section mb-4">
+        <div class="profile-section-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="section-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h5 class="section-title mb-0">Progres Belajar</h5>
+            </div>
+        </div>
 
-    @php
-        $typeIcons = ['material' => 'fa-file-alt', 'video' => 'fa-video', 'exercise' => 'fa-pen'];
-    @endphp
-
-    @if($favoriteMaterials->count() > 0)
-        <div class="row g-2">
-            @foreach($favoriteMaterials as $fav)
-                @php $material = $fav->material; @endphp
-                <div class="col-md-6">
-                    <div class="fav-item card border-0 rounded-3 position-relative">
-                        <div class="d-flex align-items-center gap-3 p-3">
-                            <div class="fav-item-icon">
-                                <i class="fas {{ $typeIcons[$material->type] ?? 'fa-file-alt' }}"></i>
+        @if($subjects->count() > 0)
+            <div class="d-flex flex-column gap-3">
+                @foreach($subjects as $subject)
+                    <div class="subject-progress-item">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="subject-progress-name">{{ $subject->name }}</span>
+                                <span class="subject-progress-meta">
+                                    {{ $subject->completed_materials }}/{{ $subject->total_materials }} materi
+                                </span>
                             </div>
-                            <div class="flex-grow-1 min-width-0">
-                                <a href="{{ route('materials.show', $material) }}"
-                                   class="stretched-link text-decoration-none fw-semibold d-block text-truncate">
-                                    {{ $material->title }}
-                                </a>
-                                <small class="text-muted">{{ $material->subject->name ?? '-' }}</small>
-                            </div>
-                            <span class="fav-type-badge">{{ $material->type_label }}</span>
-
-                            <!-- Hapus dari favorit -->
-                            <form action="{{ route('favorites.toggle', $material) }}" method="POST" class="m-0">
-                                @csrf
-                                <button type="submit" class="fav-item-remove" aria-label="Hapus dari favorit">
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                            </form>
+                            <span class="subject-progress-percent">{{ $subject->progress_percent }}%</span>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div class="progress-bar-fill" 
+                                 style="width: {{ $subject->progress_percent }}%;"></div>
                         </div>
                     </div>
+                @endforeach
+            </div>
+        @else
+            <div class="profile-empty-state">
+                <i class="fas fa-chart-line"></i>
+                <p>Belum ada subject tersedia.</p>
+            </div>
+        @endif
+    </div>
+
+    {{-- ===== MATERI FAVORIT ===== --}}
+    <div class="profile-section mb-4">
+        <div class="profile-section-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="section-icon">
+                    <i class="fas fa-heart"></i>
                 </div>
-            @endforeach
+                <h5 class="section-title mb-0">Materi Favorit</h5>
+                <span class="section-count-badge">{{ $favoriteMaterials->count() }}</span>
+            </div>
         </div>
-    @else
-        <p class="text-muted small">Belum ada materi yang difavoritkan.</p>
-    @endif
+
+        @php
+            $typeIcons = ['material' => 'fa-file-alt', 'video' => 'fa-video', 'exercise' => 'fa-pen'];
+        @endphp
+
+        @if($favoriteMaterials->count() > 0)
+            <div class="row g-3">
+                @foreach($favoriteMaterials as $fav)
+                    @php $material = $fav->material; @endphp
+                    @if($material)
+                        <div class="col-md-6">
+                            <div class="fav-card">
+                                <a href="{{ route('materials.show', $material) }}" 
+                                   class="d-flex align-items-center gap-3 flex-grow-1 text-decoration-none min-width-0">
+                                    <div class="fav-icon">
+                                        <i class="fas {{ $typeIcons[$material->type] ?? 'fa-file-alt' }}"></i>
+                                    </div>
+                                    <div class="flex-grow-1 min-width-0">
+                                        <div class="fav-meta">
+                                            {{ $material->subject->name ?? '-' }} • 
+                                            {{ ucfirst($material->type) }}
+                                        </div>
+                                        <h6 class="fav-title">{{ $material->title }}</h6>
+                                    </div>
+                                </a>
+
+                                <form action="{{ route('favorites.toggle', $material) }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="fav-remove-btn" title="Hapus dari favorit">
+                                        <i class="fas fa-heart"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+        @else
+            <div class="profile-empty-state">
+                <i class="fas fa-heart-broken"></i>
+                <p>Belum ada materi yang difavoritkan.</p>
+            </div>
+        @endif
+    </div>
 
 </div>
 @endsection

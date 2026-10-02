@@ -10,22 +10,17 @@ class HomeController extends Controller
 {
     public function index()
     {
+        $totalTopics = Material::distinct()->pluck('title')->count();
+
         $data = [
-            // Statistik
             'totalSubjects' => Subject::count(),
+            'totalTopics' => $totalTopics,
             'totalMaterials' => Material::count(),
             'totalUsers' => User::count(),
 
-            // Subject populer (top 4 berdasarkan jumlah materi)
-            'popularSubjects' => Subject::withCount('materials')
+            'subjects' => Subject::withCount('materials')
                 ->orderBy('materials_count', 'desc')
-                ->take(4)
-                ->get(),
-
-            // Konten terbaru (top 3)
-            'latestMaterials' => Material::with('subject')
-                ->latest()
-                ->take(3)
+                ->take(6)
                 ->get(),
         ];
 
