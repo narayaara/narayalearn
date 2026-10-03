@@ -171,6 +171,9 @@
             @error('youtube_url') <div class="invalid-feedback">{{ $message }}</div> @enderror
         </div>
 
+        <input type="hidden" name="source_type" id="source_type" 
+            value="{{ old('source_type', $material->file_path ? 'file' : 'link') }}">
+
         <!-- Actions -->
         <div class="d-flex justify-content-end gap-2">
             <a href="{{ route('admin.materials.index') }}" class="admin-btn-outline">

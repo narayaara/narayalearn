@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::latest()->get();
+        $users = User::withCount('favorites')->latest()->get();
 
         $totalStudents = User::where('role', 'user')->count();
         $activeUsers   = User::where('role', 'user')->count();

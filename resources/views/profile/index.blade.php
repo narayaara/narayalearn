@@ -51,45 +51,6 @@
         </div>
     </div>
 
-    {{-- ===== PROGRES BELAJAR PER SUBJECT ===== --}}
-    <div class="profile-section mb-4">
-        <div class="profile-section-header">
-            <div class="d-flex align-items-center gap-2">
-                <div class="section-icon">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-                <h5 class="section-title mb-0">Progres Belajar</h5>
-            </div>
-        </div>
-
-        @if($subjects->count() > 0)
-            <div class="d-flex flex-column gap-3">
-                @foreach($subjects as $subject)
-                    <div class="subject-progress-item">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <div class="d-flex align-items-center gap-2">
-                                <span class="subject-progress-name">{{ $subject->name }}</span>
-                                <span class="subject-progress-meta">
-                                    {{ $subject->completed_materials }}/{{ $subject->total_materials }} materi
-                                </span>
-                            </div>
-                            <span class="subject-progress-percent">{{ $subject->progress_percent }}%</span>
-                        </div>
-                        <div class="progress-bar-custom">
-                            <div class="progress-bar-fill" 
-                                 style="width: {{ $subject->progress_percent }}%;"></div>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            <div class="profile-empty-state">
-                <i class="fas fa-chart-line"></i>
-                <p>Belum ada subject tersedia.</p>
-            </div>
-        @endif
-    </div>
-
     {{-- ===== MATERI FAVORIT ===== --}}
     <div class="profile-section mb-4">
         <div class="profile-section-header">

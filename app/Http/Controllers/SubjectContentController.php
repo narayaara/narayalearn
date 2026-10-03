@@ -11,101 +11,70 @@ class SubjectContentController extends Controller
 {
     public function index()
     {
-        $subjects = Subject::all()->map(function ($subject) {
-            $subject->topics_count = $subject->materials()
-                ->distinct()
-                ->pluck('title')
-                ->count();
-            return $subject;
-        });
+        $subjects = Subject::withCount(['materials as topics_count' => function ($q) {
+            $q->select(\DB::raw('count(distinct title)'));
+        }])->get();
 
         return view('subjects.index', compact('subjects'));
     }
 
-    /**
-     * Halaman detail subject — tampilkan daftar topik.
-     */
     public function show(Subject $subject)
     {
+        // Group semua material di subject ini berdasarkan title (= topik)
         $grouped = $subject->materials()->get()->groupBy('title');
 
-        // Tiap topik diwakilin 1 material (prioritas: "material")
+        // Tiap topik diwakilin 1 Material: prioritas tipe "material",
+        // kalau belum ada pake yang pertama tersedia (video/exercise)
         $topics = $grouped->map(function ($group) {
             return $group->firstWhere('type', 'material') ?? $group->first();
         });
 
-        $favoriteIds = auth()->check()
-            ? Favorite::where('user_id', auth()->id())->pluck('material_id')->toArray()
-            : [];
+        // Berapa jenis konten (dari 3: materi/video/latihan) yang udah keisi per topik — data real, bukan karangan
+        $topicContentCounts = $grouped->map(fn ($group) => $group->count())->toArray();
 
-        return view('subjects.show', compact('subject', 'topics', 'favoriteIds'));
+        // Topik mana aja yang udah difavoritkan user ini (favorite tipe "topic", bukan "material")
+        $favoriteTopicNames = Favorite::where('user_id', auth()->id())
+            ->where('type', 'topic')
+            ->where('subject_id', $subject->id)
+            ->pluck('topic_name')
+            ->toArray();
+
+        return view('subjects.show', compact('subject', 'topics', 'topicContentCounts', 'favoriteTopicNames'));
     }
 
-    /**
-     * Halaman detail topik — tampilkan materi, video, latihan.
-     */
     public function showTopic(Subject $subject, $topic)
     {
-        $materials = $subject->materials()
-            ->where('title', $topic)
-            ->get()
-            ->keyBy('type');
+        $materials = $subject->materials()->where('title', $topic)->get()->keyBy('type');
 
-        $favoriteIds = auth()->check()
-            ? Favorite::where('user_id', auth()->id())
-                ->where('type', 'material')
-                ->pluck('material_id')
-                ->toArray()
-            : [];
+        // Favorite tipe "material" — dipake di card Materi/Video/Latihan
+        $favoriteIds = Favorite::where('user_id', auth()->id())
+            ->where('type', 'material')
+            ->pluck('material_id')
+            ->toArray();
 
-        $isTopicFavorited = auth()->check()
-            ? Favorite::where('user_id', auth()->id())
-                ->where('subject_id', $subject->id)
-                ->where('topic_name', $topic)
-                ->where('type', 'topic')
-                ->exists()
-            : false;
-
-        return view('subjects.topic', compact(
-            'subject',
-            'topic',
-            'materials',
-            'favoriteIds',
-            'isTopicFavorited'
-        ));
+        return view('subjects.topic', compact('subject', 'topic', 'materials', 'favoriteIds'));
     }
 
-    /**
-     * Halaman detail material (PDF, video, gambar).
-     */
     public function showMaterial(Material $material)
     {
-        $material->load('subject');
+        $isFavorited = false;
 
-        $isFavorited = auth()->check()
-            ? Favorite::where('user_id', auth()->id())
+        if (auth()->check()) {
+            $isFavorited = \DB::table('favorites')
+                ->where('user_id', auth()->id())
                 ->where('material_id', $material->id)
-                ->where('type', 'material')
-                ->exists()
-            : false;
+                ->exists();
+        }
 
         return view('materials.show', compact('material', 'isFavorited'));
     }
 
-    /**
-     * Download file material.
-     */
     public function download($material)
     {
         $material = Material::findOrFail($material);
-
         if (!$material->file_path) {
             abort(404);
         }
-
-        return Storage::disk('public')->download(
-            $material->file_path,
-            $material->title . '.pdf'
-        );
+        return Storage::disk('public')->download($material->file_path, $material->title . '.pdf');
     }
 }

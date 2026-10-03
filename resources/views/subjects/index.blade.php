@@ -10,7 +10,7 @@
 
         <!-- Back + Pill INLINE -->
         <div class="d-flex align-items-center gap-3 mb-3">
-            <a href="{{ route('home') }}" class="back-btn" title="Kembali ke Home">
+            <a href="{{ route('home') }}" class="back-icon-btn" title="Kembali ke Home">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <div class="section-pill mb-0">

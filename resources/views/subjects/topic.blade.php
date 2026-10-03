@@ -33,8 +33,8 @@
                 'video' => [
                     'icon' => 'fa-play-circle',
                     'title' => 'Video Pembahasan',
-                    'badge' => 'Video HD',
-                    'desc' => 'Penjelasan interaktif dari guru ahli dalam format video.',
+                    'badge' => 'Video',
+                    'desc' => 'Penjelasan dalam format video pembahasan.',
                     'meta_icon' => 'fa-clock',
                     'meta_text' => 'Tonton video',
                     'btn_text' => 'Tonton Video',
@@ -59,34 +59,44 @@
             <div class="col-md-6 col-lg-4">
                 @if($data)
                     {{-- ===== CARD AKTIF ===== --}}
-                    <a href="{{ route('materials.show', $data) }}" class="text-decoration-none d-block h-100">
-                        <div class="topic-content-card">
-                            <div class="card-top">
-                                <div class="card-icon">
-                                    <i class="fas {{ $config['icon'] }}"></i>
+                    <div class="position-relative h-100">
+                        <a href="{{ route('materials.show', $data) }}" class="text-decoration-none d-block h-100">
+                            <div class="topic-content-card">
+                                <div class="card-top">
+                                    <div class="card-icon">
+                                        <i class="fas {{ $config['icon'] }}"></i>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="card-body-custom">
-                                <div class="d-flex align-items-center gap-2 mb-2">
+                                <div class="card-body-custom">
                                     <h5 class="card-title-custom">{{ $config['title'] }}</h5>
+                                    <span class="card-badge d-inline-block">{{ $config['badge'] }}</span>
+                                    <p class="card-desc">{{ $config['desc'] }}</p>
                                 </div>
-                                <span class="card-badge mb-2 d-inline-block">{{ $config['badge'] }}</span>
-                                <p class="card-desc">{{ $config['desc'] }}</p>
-                            </div>
 
-                            <div class="card-footer-custom">
-                                <span class="card-meta">
-                                    <i class="fas {{ $config['meta_icon'] }}"></i>
-                                    {{ $config['meta_text'] }}
-                                </span>
-                                <span class="card-action-btn">
-                                    {{ $config['btn_text'] }}
-                                    <i class="fas fa-arrow-right"></i>
-                                </span>
+                                <div class="card-footer-custom">
+                                    <span class="card-meta">
+                                        <i class="fas {{ $config['meta_icon'] }}"></i>
+                                        {{ $config['meta_text'] }}
+                                    </span>
+                                    <span class="card-action-btn">
+                                        {{ $config['btn_text'] }}
+                                        <i class="fas fa-arrow-right"></i>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+
+                        @auth
+                            <form action="{{ route('favorites.toggle', $data) }}" method="POST" class="favorite-btn-form">
+                                @csrf
+                                <button type="submit" class="favorite-btn {{ in_array($data->id, $favoriteIds) ? 'is-favorited' : '' }}"
+                                        aria-label="Favorite">
+                                    <i class="fa{{ in_array($data->id, $favoriteIds) ? 's' : 'r' }} fa-heart"></i>
+                                </button>
+                            </form>
+                        @endauth
+                    </div>
 
                 @else
                     {{-- ===== CARD DISABLED ===== --}}

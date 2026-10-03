@@ -109,7 +109,6 @@
                     <th>Nama & Email</th>
                     <th>Role</th>
                     <th class="text-center">Favorit</th>
-                    <th class="col-progress">Progress</th>
                     <th>Terdaftar</th>
                     <th class="col-actions">Aksi</th>
                 </tr>
@@ -122,7 +121,6 @@
                         $initials = collect(explode(' ', $user->name))
                             ->map(fn($n) => strtoupper(substr($n, 0, 1)))
                             ->take(2)->join('');
-                        $progress  = $user->progress_percentage ?? 0;
                         $favorites = $user->favorites_count ?? 0;
                     @endphp
 
@@ -166,16 +164,6 @@
                                 <strong>{{ $favorites }}</strong>
                                 <span class="heart">❤️</span>
                             </span>
-                        </td>
-
-                        {{-- Progress --}}
-                        <td class="col-progress">
-                            <div class="user-progress">
-                                <div class="progress-track">
-                                    <div class="progress-fill" style="width: {{ $progress }}%;"></div>
-                                </div>
-                                <span class="progress-label">{{ $progress }}%</span>
-                            </div>
                         </td>
 
                         {{-- Terdaftar --}}

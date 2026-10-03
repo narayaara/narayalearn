@@ -58,7 +58,7 @@
         <div class="admin-stat-card">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="stat-card-label">DOKUMEN PDF</span>
+                    <span class="stat-card-label">CATATAN PDF</span>
                     <div class="stat-card-value">
                         <h3>{{ $totalPdf ?? 0 }}</h3>
                     </div>

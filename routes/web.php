@@ -23,7 +23,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/account', [\App\Http\Controllers\ProfileController::class, 'index'])->name('account.index');
 
     Route::post('/materials/{material}/favorite', [\App\Http\Controllers\FavoriteController::class, 'toggle'])->name('favorites.toggle');
-    Route::post('/subjects/{subject}/favorite-topic', [\App\Http\Controllers\FavoriteController::class, 'toggleTopic'])->name('favorites.toggleTopic');
 });
 
 // Admin (login + role admin)

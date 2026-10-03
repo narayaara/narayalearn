@@ -108,36 +108,38 @@
             </small>
         </div>
 
-        <!-- File Upload (PDF) -->
+        {{-- File Upload (PDF) --}}
         <div class="mb-4" id="file-field">
             <label for="file" class="form-label fw-bold">
                 <i class="fas fa-file-upload me-1" style="color: var(--pink-deep);"></i>
                 Upload File PDF
             </label>
             <input type="file" name="file" id="file"
-                   class="form-control admin-form-input @error('file') is-invalid @enderror"
-                   accept="application/pdf">
+                class="form-control admin-form-input @error('file') is-invalid @enderror"
+                accept="application/pdf">
             @error('file') <div class="invalid-feedback">{{ $message }}</div> @enderror
             <small class="text-muted d-block mt-2">
                 Format PDF. Maksimal 5 MB.
             </small>
         </div>
 
-        <!-- YouTube URL (Video) -->
+        {{-- YouTube URL (Video) --}}
         <div class="mb-4 d-none" id="youtube-field">
             <label for="youtube_url" class="form-label fw-bold">
                 <i class="fab fa-youtube me-1" style="color: var(--pink-deep);"></i>
                 YouTube URL
             </label>
             <input type="url" name="youtube_url" id="youtube_url"
-                   class="form-control admin-form-input @error('youtube_url') is-invalid @enderror"
-                   value="{{ old('youtube_url') }}"
-                   placeholder="https://www.youtube.com/watch?v=xxxxx">
+                class="form-control admin-form-input @error('youtube_url') is-invalid @enderror"
+                value="{{ old('youtube_url') }}"
+                placeholder="https://www.youtube.com/watch?v=xxxxx">
             @error('youtube_url') <div class="invalid-feedback">{{ $message }}</div> @enderror
             <small class="text-muted d-block mt-2">
                 Bisa pakai link <strong>youtube.com/watch?v=</strong> atau <strong>youtu.be/</strong>
             </small>
         </div>
+
+        <input type="hidden" name="source_type" id="source_type" value="{{ old('source_type', 'file') }}">
 
         <!-- Info Box -->
         <div class="admin-info-box mb-4">
@@ -169,18 +171,24 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const typeRadios = document.querySelectorAll('input[name="type"]');
-    const fileField = document.getElementById('file-field');
+    const typeRadios   = document.querySelectorAll('input[name="type"]');
+    const fileField    = document.getElementById('file-field');
     const youtubeField = document.getElementById('youtube-field');
+    const sourceType   = document.getElementById('source_type');
 
     function toggleFields() {
         const selected = document.querySelector('input[name="type"]:checked').value;
+
         if (selected === 'video') {
+            // Video → sembunyikan file, tampilkan YouTube
             fileField.classList.add('d-none');
             youtubeField.classList.remove('d-none');
+            sourceType.value = 'link';          // ⭐ INI KUNCINYA
         } else {
+            // PDF / Latihan → tampilkan file, sembunyikan YouTube
             fileField.classList.remove('d-none');
             youtubeField.classList.add('d-none');
+            sourceType.value = 'file';          // ⭐ INI KUNCINYA
         }
     }
 

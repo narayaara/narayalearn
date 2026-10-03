@@ -33,53 +33,6 @@
             <h2 class="banner-title">{{ $subject->name }}</h2>
             <p class="banner-subtitle">Pilih topik untuk mulai belajar</p>
 
-            {{-- Progress Belajar — DINAMIS --}}
-            @auth
-                @php
-                    $topicTitles = $subject->materials()->distinct()->pluck('title')->toArray();
-                    $totalTopics = count($topicTitles);
-
-                    $completedTopics = 0;
-                    foreach ($topicTitles as $title) {
-                        $materialIds = $subject->materials()
-                            ->where('title', $title)
-                            ->pluck('id')
-                            ->toArray();
-
-                        $totalInTopic = count($materialIds);
-                        if ($totalInTopic > 0) {
-                            $completedInTopic = \App\Models\Progress::where('user_id', auth()->id())
-                                ->whereIn('material_id', $materialIds)
-                                ->where('is_completed', true)
-                                ->count();
-
-                            // Topik dianggap "selesai" kalo SEMUA material di dalamnya udah completed
-                            if ($completedInTopic === $totalInTopic) {
-                                $completedTopics++;
-                            }
-                        }
-                    }
-
-                    $subjectProgress = $totalTopics > 0 
-                        ? round(($completedTopics / $totalTopics) * 100) 
-                        : 0;
-                @endphp
-
-                <div class="banner-progress mt-3">
-                    <div class="d-flex align-items-center justify-content-between mb-2">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="fas fa-chart-line" style="color: var(--pink-deep); font-size: 14px;"></i>
-                            <span class="progress-text">Progres Belajar: {{ $subjectProgress }}%</span>
-                        </div>
-                        <span class="progress-meta">
-                            {{ $completedTopics }}/{{ $totalTopics }} Topik
-                        </span>
-                    </div>
-                    <div class="progress-bar-custom">
-                        <div class="progress-bar-fill" style="width: {{ $subjectProgress }}%;"></div>
-                    </div>
-                </div>
-            @endauth
         </div>
     </div>
 
@@ -115,7 +68,7 @@
             <div class="flex-grow-1 min-width-0">
                 <div class="topic-meta">
                     TOPIK {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
-                    • {{ $materialCount }} Materi
+                    • {{ $materialCount }} Konten
                 </div>
                 <h4 class="topic-title">{{ $title }}</h4>
                 <p class="topic-desc">
